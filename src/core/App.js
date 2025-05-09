@@ -1,7 +1,10 @@
-import {Application} from 'pixi.js';
-import {i18n} from './i18n';
-import StateMachine from './StateMachine';
+import {Application, Assets} from 'pixi.js';
+import i18n from './i18n';
 import config from '../config';
+import manifest from '../manifest';
+import eventBus from './EventBus';
+import Events from '../constants/Events';
+import StateMachine from './StateMachine';
 
 
 export default class App {
@@ -10,9 +13,11 @@ export default class App {
     }
 
     async start(states = {}) {
-        await this._createApplication();
-        this._createStateMachine(states);
         i18n.setLang(config.lang);
+        await this._createApplication();
+        await this._loadAssets();
+        this._createStateMachine(states);
+        this._resize();
 
         this._addListeners();
     }
@@ -23,20 +28,30 @@ export default class App {
         document.getElementById('game-container').appendChild(this._app.canvas);
     }
 
+    async _loadAssets() {
+        await Assets.init({ manifest });
+        const bundleNames = manifest.bundles.map(b => b.name);
+
+        for (const name of bundleNames) {
+            await Assets.loadBundle(name);
+        }
+    }
+
     _createStateMachine(states = {}) {
         const stateMachine = new StateMachine();
         Object.keys(states).forEach((name) => {
             stateMachine.addState(name, states[name]);
-        })
+        });
         stateMachine.changeState(config.entryState);
     }
 
     _addListeners() {
-        window.addEventListener('resize', () => this._onResize());
+        window.addEventListener('resize', () => this._resize());
     }
 
-    _onResize() {
+    _resize() {
         this._app.renderer.resize(window.innerWidth, window.innerHeight);
+        eventBus.emit(Events.RESIZE, this.width, this.height);
     }
 
     get width() {

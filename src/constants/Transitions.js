@@ -1,6 +1,6 @@
-import {States} from './States';
+import States from './States';
 
-export const Transitions = {
+const Transitions = {
     [States.MENU]: [
         States.LEVELS,
         States.GAME_OVER
@@ -28,3 +28,5 @@ export const Transitions = {
         States.MENU
     ],
 };
+
+export default Transitions;

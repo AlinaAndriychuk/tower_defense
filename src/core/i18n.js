@@ -6,7 +6,7 @@ const languages = {
 
 let currentLang = 'en';
 
-export const i18n = {
+const i18n = {
     setLang(langCode) {
         if (languages[langCode]) {
             currentLang = langCode;
@@ -27,3 +27,5 @@ export const i18n = {
         }
     }
 };
+
+export default i18n;

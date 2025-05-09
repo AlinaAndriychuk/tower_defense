@@ -1,9 +1,10 @@
-import {Transitions} from '../constants/Transitions';
+import Transitions from '../constants/Transitions';
 
 export default class StateMachine {
     constructor() {
         this._states = {};
         this._currentState = null;
+        this._addListeners();
     }
 
     addState(name, state) {
@@ -28,5 +29,9 @@ export default class StateMachine {
         this._currentState = new this._states[name](name);
         app.stage.addChild(this._currentState);
         this._currentState.enter();
+    }
+
+    _addListeners() {
+
     }
 }

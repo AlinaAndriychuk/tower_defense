@@ -1,4 +1,4 @@
-export const States = {
+const States = {
     MENU: 'menu',
     LEVELS: 'levels',
     START_GAME: 'start_game',
@@ -6,3 +6,5 @@ export const States = {
     COMPLETE_GAME: 'complete_game',
     GAME_OVER: 'game_over',
 };
+
+export default States;

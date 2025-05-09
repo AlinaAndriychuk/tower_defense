@@ -1,6 +1,9 @@
 const config = {
     lang: 'en',
     entryState: 'menu',
+    assets: [
+        {alias: 'back', src: './assets/back.png'},
+    ],
     app: {
         antialias: false,
         backgroundAlpha: 0,
@@ -17,7 +20,7 @@ const config = {
         startButton: {
             width: 200,
             height: 70,
-            color: 0x00ccff,
+            color: 0xa0a0a0,
             y: 350
         }
     }

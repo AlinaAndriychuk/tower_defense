@@ -1,3 +1,5 @@
-export const Events = {
-
+const Events = {
+    RESIZE: 'RESIZE'
 };
+
+export default Events;

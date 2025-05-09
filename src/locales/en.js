@@ -1,4 +1,4 @@
 export default {
-    MENU_TITLE: 'Main Menu',
+    GAME_NAME: 'Tower Defense',
     START_BUTTON: 'Start Game',
 };
