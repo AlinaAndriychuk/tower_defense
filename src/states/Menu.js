@@ -8,10 +8,6 @@ import Events from '../constants/Events';
 import States from '../constants/States';
 
 export default class Menu extends State {
-    constructor(name) {
-        super(name);
-    }
-
     _createComponents() {
         this._createBackground();
         this._createTitle();
@@ -57,7 +53,7 @@ export default class Menu extends State {
         startButton.addChild(text);
 
         startButton.on('pointerdown', () => {
-            eventBus.emit(Events.CHANGE_STATE, States.LEVELS);
+            eventBus.emit(Events.CHANGE_STATE, {name: States.LEVELS});
         });
     }
 }

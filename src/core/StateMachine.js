@@ -13,7 +13,7 @@ export default class StateMachine {
         this._states[name] = state;
     }
 
-    _changeState(name) {
+    _changeState({name = '', data = {}}) {
         if (!this._states[name]) {
             console.error(`State ${name} not added.`);
             return;
@@ -31,7 +31,7 @@ export default class StateMachine {
 
         this._currentState = new this._states[name](name);
         app.stage.addChild(this._currentState);
-        this._currentState.enter();
+        this._currentState.enter(data);
     }
 
     _addListeners() {

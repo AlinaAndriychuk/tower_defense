@@ -22,8 +22,8 @@ export default class Levels extends State {
         utils.center(container, this.width, this.height);
         this.addChild(container);
 
-        config.levels.levels.forEach((level, index) => {
-            const card= new Sprite(Assets.get(`level_${index}`));
+        config.levels.levels.forEach((level) => {
+            const card= new Sprite(Assets.get(`levels_card_${level.id}`));
             utils.scaleToFit(card, config.levels.card.width, config.levels.card.height);
             card.anchor.set(0.5);
             card.eventMode = 'static';
@@ -31,7 +31,7 @@ export default class Levels extends State {
             container.addChild(card);
 
             card.on('pointerdown', () => {
-                eventBus.emit(Events.CHANGE_STATE, States.START_GAME);
+                eventBus.emit(Events.CHANGE_STATE, {name: States.MAIN_GAME, data: level});
             });
         });
     }

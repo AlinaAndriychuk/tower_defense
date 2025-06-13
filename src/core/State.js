@@ -9,13 +9,14 @@ export default class State extends Container {
         this._stateName = name;
     }
 
-    enter() {
+    enter(data = {}) {
         this._createComponents();
         this._addListeners();
         this._resize(app.width, app.height);
     }
 
     exit() {
+        this._clear();
         this._removeListeners();
         this.removeFromParent();
         this.destroy({children: true});
@@ -27,6 +28,10 @@ export default class State extends Container {
 
     _addListeners() {
         eventBus.on(Events.RESIZE, this._resize, this);
+    }
+
+    _clear() {
+
     }
 
     _removeListeners() {

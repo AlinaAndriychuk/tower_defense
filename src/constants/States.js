@@ -1,12 +1,12 @@
 import Menu from '../states/Menu';
 import Levels from '../states/Levels';
-import StartGame from '../states/StartGame';
+import MainGame from '../states/MainGame';
 
 const States = {
     MENU: 'menu',
     LEVELS: 'levels',
-    START_GAME: 'start_game',
-    WAVE: 'wave',
+    MAIN_GAME: 'main_game',
+    RESTART_GAME: 'restart_game',
     COMPLETE_GAME: 'complete_game',
     GAME_OVER: 'game_over',
 };
@@ -14,7 +14,7 @@ const States = {
 export const StateViews = {
     [States.MENU]: Menu,
     [States.LEVELS]: Levels,
-    [States.START_GAME]: StartGame
+    [States.MAIN_GAME]: MainGame
 }
 
 export default States;

@@ -41,7 +41,7 @@ export default class App {
         Object.keys(states).forEach((name) => {
             stateMachine.addState(name, states[name]);
         });
-        eventBus.emit(Events.CHANGE_STATE, config.entryState);
+        eventBus.emit(Events.CHANGE_STATE, {name: config.entryState});
     }
 
     _addListeners() {

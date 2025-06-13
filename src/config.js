@@ -27,7 +27,7 @@ const config = {
             height: 100,
         },
         levels: [
-            {}
+            {id: 0}
         ]
     }
 };

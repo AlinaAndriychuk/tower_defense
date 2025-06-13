@@ -6,19 +6,16 @@ const Transitions = {
         States.GAME_OVER
     ],
     [States.LEVELS]: [
-        States.START_GAME,
+        States.MAIN_GAME,
         States.GAME_OVER
     ],
-    [States.START_GAME]: [
-        States.WAVE,
+    [States.MAIN_GAME]: [
+        States.RESTART_GAME,
         States.LEVELS,
         States.GAME_OVER
     ],
-    [States.WAVE]: [
-        States.WAVE,
-        States.LEVELS,
-        States.COMPLETE_GAME,
-        States.GAME_OVER
+    [States.RESTART_GAME]: [
+        [States.MAIN_GAME]
     ],
     [States.COMPLETE_GAME]: [
         States.LEVELS,
