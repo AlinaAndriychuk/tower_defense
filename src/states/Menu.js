@@ -1,14 +1,15 @@
-import {Text, Graphics, Sprite, Assets} from 'pixi.js';
-import State from './State';
+import {Text, Graphics, Sprite, Assets, Container} from 'pixi.js';
+import State from '../core/State';
 import Styles from '../constants/Styles';
-import i18n from '../core/i18n';
+import i18n from '../helpers/i18n';
 import config from '../config';
+import eventBus from '../core/EventBus';
+import Events from '../constants/Events';
+import States from '../constants/States';
 
 export default class Menu extends State {
-    constructor() {
-        super();
-        this._startButton = null;
-        this._back = null;
+    constructor(name) {
+        super(name);
     }
 
     _createComponents() {
@@ -18,8 +19,8 @@ export default class Menu extends State {
     }
 
     _createBackground() {
-        this._back = new Sprite(Assets.get('back'));
-        this.addChild(this._back);
+        const back= new Sprite(Assets.get('back'));
+        this.addChild(back);
     }
 
     _createTitle() {
@@ -34,30 +35,29 @@ export default class Menu extends State {
     }
 
     _createStartButton() {
-        this._startButton = new Graphics()
+        const startButton = new Container();
+        const graphics = new Graphics()
             .rect(0, 0, config.menu.startButton.width, config.menu.startButton.height)
             .fill({ color: config.menu.startButton.color });
-        this._startButton.pivot.set(this._startButton.width / 2, this._startButton.height / 2);
-        this._startButton.x = this.width / 2;
-        this._startButton.y = config.menu.startButton.y;
-        this._startButton.eventMode = 'static';
-        this._startButton.cursor = 'pointer';
-        this.addChild(this._startButton);
+        startButton.addChild(graphics);
+        startButton.pivot.set(startButton.width / 2, startButton.height / 2);
+        startButton.x = this.width / 2;
+        startButton.y = config.menu.startButton.y;
+        startButton.eventMode = 'static';
+        startButton.cursor = 'pointer';
+        this.addChild(startButton);
 
         const text = new Text({
             text: i18n.get('START_BUTTON'),
             style: Styles.MENU.BUTTON
         });
         text.anchor.set(0.5);
-        text.x = this._startButton.width / 2;
-        text.y =  this._startButton.height / 2;
-        this._startButton.addChild(text);
-    }
+        text.x = startButton.width / 2;
+        text.y =  startButton.height / 2;
+        startButton.addChild(text);
 
-    _addListeners() {
-        super._addListeners();
-        this._startButton.on('pointerdown', () => {
-            console.log('start game')
+        startButton.on('pointerdown', () => {
+            eventBus.emit(Events.CHANGE_STATE, States.LEVELS);
         });
     }
 }

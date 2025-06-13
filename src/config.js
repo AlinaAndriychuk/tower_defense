@@ -1,9 +1,6 @@
 const config = {
     lang: 'en',
     entryState: 'menu',
-    assets: [
-        {alias: 'back', src: './assets/back.png'},
-    ],
     app: {
         antialias: false,
         backgroundAlpha: 0,
@@ -23,6 +20,15 @@ const config = {
             color: 0xa0a0a0,
             y: 350
         }
+    },
+    levels: {
+        card: {
+            width: 100,
+            height: 100,
+        },
+        levels: [
+            {}
+        ]
     }
 };
 

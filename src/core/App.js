@@ -1,5 +1,5 @@
 import {Application, Assets} from 'pixi.js';
-import i18n from './i18n';
+import i18n from '../helpers/i18n';
 import config from '../config';
 import manifest from '../manifest';
 import eventBus from './EventBus';
@@ -17,7 +17,6 @@ export default class App {
         await this._createApplication();
         await this._loadAssets();
         this._createStateMachine(states);
-        this._resize();
 
         this._addListeners();
     }
@@ -42,7 +41,7 @@ export default class App {
         Object.keys(states).forEach((name) => {
             stateMachine.addState(name, states[name]);
         });
-        stateMachine.changeState(config.entryState);
+        eventBus.emit(Events.CHANGE_STATE, config.entryState);
     }
 
     _addListeners() {

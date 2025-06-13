@@ -1,4 +1,6 @@
 import Transitions from '../constants/Transitions';
+import eventBus from './EventBus';
+import Events from '../constants/Events';
 
 export default class StateMachine {
     constructor() {
@@ -11,7 +13,7 @@ export default class StateMachine {
         this._states[name] = state;
     }
 
-    changeState(name) {
+    _changeState(name) {
         if (!this._states[name]) {
             console.error(`State ${name} not added.`);
             return;
@@ -24,6 +26,7 @@ export default class StateMachine {
 
         if (this._currentState) {
             this._currentState.exit();
+            this._currentState = null;
         }
 
         this._currentState = new this._states[name](name);
@@ -32,6 +35,6 @@ export default class StateMachine {
     }
 
     _addListeners() {
-
+        eventBus.on(Events.CHANGE_STATE, this._changeState, this);
     }
 }

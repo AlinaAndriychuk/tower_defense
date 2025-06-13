@@ -9,6 +9,19 @@ const manifest = {
                 },
             ],
         },
+        {
+            name: 'levels',
+            assets: [
+                {
+                    alias: 'levels_back',
+                    src: './assets/levels_back.png',
+                },
+                {
+                    alias: 'level_0',
+                    src: './assets/level_0.png',
+                },
+            ],
+        },
     ]
 };
 

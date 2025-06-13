@@ -1,17 +1,12 @@
 import './styles.scss';
-import States from './constants/States';
+import {StateViews} from './constants/States';
 import App from './core/App';
-import Menu from './states/Menu';
 import eventBus from './core/EventBus';
 import Events from './constants/Events';
 
 const app = window.app = new App();
 
-const states = {
-    [States.MENU]: Menu
-}
-
-app.start(states);
+app.start(StateViews);
 
 // Logging
 const styleName = 'color: #2c3e50; background-color: #ecf0f1; padding: 2px 6px; border-radius: 4px; font-weight: bold;';
@@ -19,6 +14,8 @@ const styleArgs = 'color: #34495e;';
 
 Object.keys(Events).forEach((name) => {
     eventBus.on(name, (...args) => {
+        if (name === 'RESIZE') return;
+
         let formatString = `%c${name}%c`;
         const formatArgs = [styleName, ''];
 

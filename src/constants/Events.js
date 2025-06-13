@@ -1,5 +1,6 @@
 const Events = {
-    RESIZE: 'RESIZE'
+    RESIZE: 'RESIZE',
+    CHANGE_STATE: 'CHANGE_STATE',
 };
 
 export default Events;
