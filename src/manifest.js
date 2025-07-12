@@ -13,12 +13,12 @@ const manifest = {
             name: 'levels',
             assets: [
                 {
-                    alias: 'levels_back',
-                    src: './assets/levels_back.png',
+                    alias: 'level_selector_back',
+                    src: './assets/level_select_back.png',
                 },
                 {
-                    alias: 'levels_card_0',
-                    src: './assets/levels_card_0.png',
+                    alias: 'level_selector_card_0',
+                    src: './assets/level_select_card_0.png',
                 },
             ],
         },

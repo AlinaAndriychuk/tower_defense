@@ -53,7 +53,7 @@ export default class Menu extends State {
         startButton.addChild(text);
 
         startButton.on('pointerdown', () => {
-            eventBus.emit(Events.CHANGE_STATE, {name: States.LEVELS});
+            eventBus.emit(Events.CHANGE_STATE, {name: States.LEVEL_SELECT});
         });
     }
 }

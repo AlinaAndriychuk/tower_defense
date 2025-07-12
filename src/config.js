@@ -25,7 +25,7 @@ const config = {
             y: 350
         }
     },
-    levels: {
+    levelSelector: {
         card: {
             width: 100,
             height: 100,
