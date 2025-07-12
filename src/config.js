@@ -10,6 +10,10 @@ const config = {
         resizeTo: window,
         resolution: 1,
     },
+    state: {
+        safeWidth: 500,
+        safeHeight: 500,
+    },
     menu: {
         title: {
             y: 200
@@ -27,7 +31,13 @@ const config = {
             height: 100,
         },
         levels: [
-            {id: 0}
+            {
+                id: 0,
+                spawnPos: {x: 200, y: 200},
+                waves: [
+                    {}
+                ]
+            }
         ]
     }
 };

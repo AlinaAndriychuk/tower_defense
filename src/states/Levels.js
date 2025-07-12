@@ -19,7 +19,7 @@ export default class Levels extends State {
 
     _createLevelCards() {
         const container= new Container();
-        utils.center(container, this.width, this.height);
+        utils.centralize(container, this.width, this.height);
         this.addChild(container);
 
         config.levels.levels.forEach((level) => {

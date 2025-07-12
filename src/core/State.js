@@ -2,6 +2,7 @@ import {Container} from 'pixi.js';
 import eventBus from './EventBus';
 import Events from '../constants/Events';
 import utils from '../helpers/utils';
+import config from '../config';
 
 export default class State extends Container {
     constructor(name) {
@@ -39,8 +40,8 @@ export default class State extends Container {
     }
 
     _resize(width, height) {
-        utils.scaleToCover(this, width, height);
-        utils.center(this, width, height);
+        utils.scaleToCover(this, width, height, config.state.safeWidth, config.state.safeHeight);
+        utils.centralize(this, width, height);
     }
 
     get stateName() {
