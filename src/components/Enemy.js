@@ -1,6 +1,6 @@
-import {AnimatedSprite, Assets, Container, Sprite} from 'pixi.js';
+import {AnimatedSprite, Assets, Container} from 'pixi.js';
 import config from '../config';
-import utils from '../helpers/utils';
+import gsap from 'gsap';
 
 export default class Enemy extends Container {
     constructor(type) {
@@ -29,14 +29,35 @@ export default class Enemy extends Container {
         this._animatedSprite = new AnimatedSprite(sheet.animations[animationName]);
         this._animatedSprite.animationSpeed = 0.1;
         this._animatedSprite.play();
-        this._animatedSprite.anchor.set(0.5, 1);
         this.addChild(this._animatedSprite);
+
+        this.pivot.set(this.width / 2, this.height);
     }
 
     spawn(x, y) {
-        this._animatedSprite.position.set(x, y);
+        this.position.set(x, y);
         app.currentState.addChild(this);
+    }
 
+    move(path = [], currentStep = 0) {
+        currentStep++;
+        console.log(path[currentStep]);
+        if (!path[currentStep]) return;
 
+        const {x, y} = path[currentStep];
+        const dx = x - this.x;
+        const dy = y - this.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const duration = distance / this._enemyConfig.speed;
+
+        gsap.to(this, {
+            x,
+            y,
+            duration,
+            ease: 'none',
+            onComplete: () => {
+                this.move(path, currentStep);
+            }
+        })
     }
 }

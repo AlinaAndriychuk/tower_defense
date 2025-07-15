@@ -42,8 +42,15 @@ const config = {
                 path: [
                     { x: 591, y: 80 },
                     { x: 591, y: 177 },
-                    { x: 200, y: 250 },
-                    { x: 400, y: 300 }
+                    { x: 368, y: 177 },
+                    { x: 368, y: 431 },
+                    { x: 624, y: 431 },
+                    { x: 624, y: 237 },
+                    { x: 432, y: 237 },
+                    { x: 432, y: 367 },
+                    { x: 561, y: 367 },
+                    { x: 561, y: 334 },
+                    { x: 720, y: 334 },
                 ],
                 waves: [
                     {enemies: [{type: 'medusa', count: 1}]},
@@ -54,7 +61,7 @@ const config = {
     enemies: {
         medusa: {
             health: 150,
-            speed: 2,
+            speed: 100,
             delay: 2
         },
     }

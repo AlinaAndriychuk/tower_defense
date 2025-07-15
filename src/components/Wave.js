@@ -18,6 +18,7 @@ export default class Wave {
             for (let i = 0; i < count; i++) {
                 const enemy = new Enemy(type);
                 enemy.spawn(this._path[0].x, this._path[0].y);
+                enemy.move(this._path);
             }
         });
     }

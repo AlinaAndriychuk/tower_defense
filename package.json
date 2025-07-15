@@ -19,6 +19,7 @@
     "@capacitor/cli": "^7.2.0",
     "@capacitor/core": "^7.2.0",
     "@capacitor/ios": "^7.2.0",
+    "gsap": "^3.13.0",
     "pixi.js": "^8.9.1"
   },
   "devDependencies": {
