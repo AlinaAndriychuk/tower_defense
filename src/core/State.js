@@ -10,9 +10,10 @@ export default class State extends Container {
         this._stateName = name;
     }
 
-    enter(data = {}) {
+    enter(stateConfig = {}) {
         this._createComponents();
         this._addListeners();
+        this._setPivot();
         this._resize(app.width, app.height);
     }
 
@@ -39,9 +40,21 @@ export default class State extends Container {
         eventBus.removeAllByContext(this);
     }
 
+    _setPivot() {
+        this.pivot.set(config.state.pivot.x, config.state.pivot.y);
+    }
+
     _resize(width, height) {
-        utils.scaleToCover(this, width, height, config.state.safeWidth, config.state.safeHeight);
-        utils.centralize(this, width, height);
+        utils.scaleToCover({
+            target: this,
+            width,
+            height,
+            safeWidth: config.state.safeWidth,
+            safeHeight: config.state.safeHeight,
+            originWidth: config.state.width,
+            originHeight: config.state.height,
+        });
+        this.position.set(width / 2, height / 2);
     }
 
     get stateName() {

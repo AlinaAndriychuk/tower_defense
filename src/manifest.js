@@ -31,6 +31,15 @@ const manifest = {
                 },
             ],
         },
+        {
+            name: 'enemies',
+            assets: [
+                {
+                    alias: 'medusa_move',
+                    src: './assets/medusa_move.json',
+                },
+            ],
+        },
     ]
 };
 

@@ -5,11 +5,13 @@ import manifest from '../manifest';
 import eventBus from './EventBus';
 import Events from '../constants/Events';
 import StateMachine from './StateMachine';
+import State from './State';
 
 
 export default class App {
     constructor() {
         this._app = null;
+        this._currentState = null;
     }
 
     async start(states = {}) {
@@ -51,6 +53,24 @@ export default class App {
     _resize() {
         this._app.renderer.resize(window.innerWidth, window.innerHeight);
         eventBus.emit(Events.RESIZE, this.width, this.height);
+    }
+
+    _clear() {
+        this._app.destroy(true, true);
+        this._currentState = null;
+    }
+
+    get currentState() {
+        return this._currentState;
+    }
+
+    set currentState(state) {
+        if (!(state instanceof State)) {
+            console.error(`Can not set  ${state} as currentState. ${state} is not instanceof ${State}`);
+            return;
+        }
+
+        this._currentState = state;
     }
 
     get width() {

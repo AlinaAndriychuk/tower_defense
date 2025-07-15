@@ -1,10 +1,18 @@
 const utils = {
-    scaleToCover(target, maxWidth, maxHeight, safeWidth = 0, safeHeight = 0) {
+    scaleToCover({
+                     target,
+                     width,
+                     height,
+                     safeWidth = 0,
+                     safeHeight = 0,
+                     originWidth = 0,
+                     originHeight = 0
+    }) {
         const bounds = target.getLocalBounds();
 
-        const safeScale = Math.min(maxWidth / safeWidth, maxHeight / safeHeight);
-        const baseScaleX = maxWidth / Math.min(maxWidth, bounds.width);
-        const baseScaleY = maxHeight / Math.min(maxHeight, bounds.height);
+        const safeScale = Math.min(width / safeWidth, height / safeHeight);
+        const baseScaleX = width / Math.min(width, originWidth ?? bounds.width);
+        const baseScaleY = height / Math.min(height, originHeight ?? bounds.height);
         const baseScale = Math.max(baseScaleX, baseScaleY);
 
         target.scale.set(Math.min(safeScale, baseScale));

@@ -7,16 +7,20 @@ export default class Level extends State {
         super(name);
 
         this._id = null;
+        this._currentWaveId = null;
+        this._wavesConfig = [];
+        this._path = [];
     }
 
-    enter(data = {}) {
-        this._id = data.id;
-        this._wavesData = data.waves;
-        this._currentWaveId = null;
+    enter(levelConfig = {}) {
+        this._id = levelConfig.id;
+        this._wavesConfig = levelConfig.waves;
+        this._path = levelConfig.path;
 
         this._createComponents();
         this._callNextWave();
         this._addListeners();
+        this._setPivot();
         this._resize(app.width, app.height);
     }
 
@@ -31,7 +35,7 @@ export default class Level extends State {
 
     _callNextWave() {
         this._setCurrentWaveId();
-        const wave = new Wave(this._wavesData[this._currentWaveId]);
+        const wave = new Wave(this._wavesConfig[this._currentWaveId], this._path);
     }
 
     _setCurrentWaveId() {
@@ -45,6 +49,8 @@ export default class Level extends State {
     _clear() {
         super._clear();
         this._id = null;
-        this._currentWaveId = 0;
+        this._currentWaveId = null;
+        this._wavesConfig = [];
+        this._path = [];
     }
 }

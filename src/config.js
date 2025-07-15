@@ -11,6 +11,12 @@ const config = {
         resolution: 1,
     },
     state: {
+        width: 960,
+        height: 640,
+        pivot: {
+            x: 480,
+            y: 320
+        },
         safeWidth: 500,
         safeHeight: 500,
     },
@@ -33,12 +39,24 @@ const config = {
         levels: [
             {
                 id: 0,
-                spawnPos: {x: 200, y: 200},
+                path: [
+                    { x: 591, y: 80 },
+                    { x: 591, y: 177 },
+                    { x: 200, y: 250 },
+                    { x: 400, y: 300 }
+                ],
                 waves: [
-                    {}
+                    {enemies: [{type: 'medusa', count: 1}]},
                 ]
             }
         ]
+    },
+    enemies: {
+        medusa: {
+            health: 150,
+            speed: 2,
+            delay: 2
+        },
     }
 };
 

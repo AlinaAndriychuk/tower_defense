@@ -31,7 +31,7 @@ export default class LevelSelect extends State {
             container.addChild(card);
 
             card.on('pointerdown', () => {
-                eventBus.emit(Events.CHANGE_STATE, {name: States.LEVEL, data: level});
+                eventBus.emit(Events.CHANGE_STATE, {name: States.LEVEL, stateConfig: level});
             });
         });
     }
