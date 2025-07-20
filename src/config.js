@@ -42,7 +42,7 @@ const config = {
                 path: [
                     { x: 591, y: 80 },
                     { x: 591, y: 177 },
-                    { x: 368, y: 177, sort: 'backToFront' },
+                    { x: 368, y: 177 },
                     { x: 368, y: 431 },
                     { x: 624, y: 431 },
                     { x: 624, y: 237, sort: 'backToFront' },
@@ -62,8 +62,14 @@ const config = {
         medusa: {
             health: 150,
             speed: 200,
-            delay: 2
+            delay: 0.2
         },
+    },
+    hud: {
+        width: 100,
+        height: 100,
+        color: 0x000000,
+        alpha: 0.3
     }
 };
 

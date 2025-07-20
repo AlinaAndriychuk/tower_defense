@@ -15,6 +15,7 @@ export default class Enemy extends Container {
 
     _init() {
         this._createComponents();
+        this.pivot.set(this.width / 2, this.height);
     }
 
     _createComponents() {
@@ -23,8 +24,6 @@ export default class Enemy extends Container {
         this._animatedSprite.animationSpeed = 0.1;
         this._animatedSprite.play();
         this.addChild(this._animatedSprite);
-
-        this.pivot.set(this.width / 2, this.height);
     }
 
     _getAnimation(animationType = '') {
@@ -55,7 +54,7 @@ export default class Enemy extends Container {
         const duration = distance / this._enemyConfig.speed;
 
         if (sort) {
-            this.emit(Events.SORT_ENEMIES, this, sort)
+            this.emit(Events.SORT_ENEMY, this, sort)
         }
 
         if (this.destroyed) return; // if it was removed between this function execution
@@ -74,14 +73,18 @@ export default class Enemy extends Container {
         });
     }
 
-    destroy(options) {
+    destroy(options= {}) {
         if (this.destroyed) return;
 
+        this._clear();
         gsap.killTweensOf(this);
+        this.removeFromParent();
+        super.destroy({children: true});
+    }
+
+    _clear() {
         this._type = '';
         this._enemyConfig = null;
         this._animatedSprite = null;
-        this.removeFromParent();
-        super.destroy({children: true});
     }
 }

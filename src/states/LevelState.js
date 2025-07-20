@@ -1,9 +1,10 @@
-import State from '../core/State';
 import {Assets, Sprite} from 'pixi.js';
-import Wave from '../components/Wave';
+import State from '../core/State';
 import EnemyContainer from '../components/EnemyContainer';
+import HUD from '../components/HUD';
+import WaveController from '../controllers/WaveController';
 
-export default class Level extends State {
+export default class LevelState extends State {
     constructor(name = '') {
         super(name);
 
@@ -29,11 +30,15 @@ export default class Level extends State {
 
     _createComponents() {
         this._createBackground();
+        this._createHUD();
     }
 
     _createBackground() {
-        const back= new Sprite(Assets.get(`level_${this._id}`));
-        this.addChild(back);
+        this.addChild(new Sprite(Assets.get(`level_${this._id}`)));
+    }
+
+    _createHUD() {
+        this.addChild(new HUD());
     }
 
     _createEnemyManager() {
@@ -43,7 +48,7 @@ export default class Level extends State {
 
     _callNextWave() {
         this._setCurrentWaveId();
-        const wave = new Wave(this._enemyContainer, this._wavesConfig[this._currentWaveId], this._path);
+        new WaveController(this._enemyContainer, this._wavesConfig[this._currentWaveId], this._path);
     }
 
     _setCurrentWaveId() {

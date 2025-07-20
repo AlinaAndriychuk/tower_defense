@@ -1,5 +1,4 @@
 import {Container} from 'pixi.js';
-import eventBus from './EventBus';
 import Events from '../constants/Events';
 import utils from '../helpers/utils';
 import config from '../config';
@@ -18,8 +17,8 @@ export default class State extends Container {
     }
 
     exit() {
-        this._clear();
         this._removeListeners();
+        this._clear();
         this.removeFromParent();
         this.destroy({children: true});
     }
@@ -29,7 +28,7 @@ export default class State extends Container {
     }
 
     _addListeners() {
-        eventBus.on(Events.RESIZE, this._resize, this);
+        app.on(Events.RESIZE, this._resize, this);
     }
 
     _clear() {
@@ -37,7 +36,7 @@ export default class State extends Container {
     }
 
     _removeListeners() {
-        eventBus.removeAllByContext(this);
+        app.off(Events.RESIZE, this._resize, this);
     }
 
     _setPivot() {

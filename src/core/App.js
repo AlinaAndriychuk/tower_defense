@@ -1,15 +1,16 @@
-import {Application, Assets} from 'pixi.js';
+import {Application, Assets, EventEmitter} from 'pixi.js';
 import i18n from '../helpers/i18n';
 import config from '../config';
 import manifest from '../manifest';
-import eventBus from './EventBus';
 import Events from '../constants/Events';
 import StateMachine from './StateMachine';
 import State from './State';
 
 
-export default class App {
+export default class App extends EventEmitter {
     constructor() {
+        super();
+
         this._app = null;
         this._currentState = null;
     }
@@ -43,7 +44,7 @@ export default class App {
         Object.keys(states).forEach((name) => {
             stateMachine.addState(name, states[name]);
         });
-        eventBus.emit(Events.CHANGE_STATE, {name: config.entryState});
+        app.emit(Events.CHANGE_STATE, {name: config.entryState});
     }
 
     _addListeners() {
@@ -52,14 +53,10 @@ export default class App {
 
     _resize() {
         this._app.renderer.resize(window.innerWidth, window.innerHeight);
-        eventBus.emit(Events.RESIZE, this.width, this.height);
+        app.emit(Events.RESIZE, this.width, this.height);
     }
 
-    _clear() {
-        this._currentState = null;
-    }
-
-    get currentState() { // todo remove if is not used
+    get currentState() {
         return this._currentState;
     }
 

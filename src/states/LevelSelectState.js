@@ -2,11 +2,16 @@ import State from '../core/State';
 import {Assets, Container, Sprite} from 'pixi.js';
 import config from '../config';
 import utils from '../helpers/utils';
-import eventBus from '../core/EventBus';
 import Events from '../constants/Events';
 import States from '../constants/States';
 
-export default class LevelSelect extends State {
+export default class LevelSelectState extends State {
+    constructor(name = '') {
+        super(name);
+
+        this._cards = [];
+    }
+
     _createComponents() {
         this._createBackground();
         this._createLevelCards();
@@ -29,10 +34,21 @@ export default class LevelSelect extends State {
             card.eventMode = 'static';
             card.cursor = 'pointer';
             container.addChild(card);
+            this._cards.push(card);
 
-            card.on('pointerdown', () => {
-                eventBus.emit(Events.CHANGE_STATE, {name: States.LEVEL, stateConfig: level});
+            card.once('pointerdown', () => {
+                app.emit(Events.CHANGE_STATE, {name: States.LEVEL, stateConfig: level});
             });
         });
+    }
+
+    _removeListeners() {
+        super._removeListeners();
+        this._cards.forEach(card => card.removeAllListeners());
+    }
+
+    _clear() {
+        super._clear();
+        this._cards = [];
     }
 }

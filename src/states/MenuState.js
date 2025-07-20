@@ -3,11 +3,16 @@ import State from '../core/State';
 import Styles from '../constants/Styles';
 import i18n from '../helpers/i18n';
 import config from '../config';
-import eventBus from '../core/EventBus';
 import Events from '../constants/Events';
 import States from '../constants/States';
 
-export default class Menu extends State {
+export default class MenuState extends State {
+    constructor(name = '') {
+        super(name);
+
+        this._buttons = [];
+    }
+
     _createComponents() {
         this._createBackground();
         this._createTitle();
@@ -51,9 +56,20 @@ export default class Menu extends State {
         text.x = startButton.width / 2;
         text.y =  startButton.height / 2;
         startButton.addChild(text);
+        this._buttons.push(startButton);
 
-        startButton.on('pointerdown', () => {
-            eventBus.emit(Events.CHANGE_STATE, {name: States.LEVEL_SELECT});
+        startButton.once('pointerdown', () => {
+            app.emit(Events.CHANGE_STATE, {name: States.LEVEL_SELECT});
         });
+    }
+
+    _removeListeners() {
+        super._removeListeners();
+        this._buttons.forEach(button => button.removeAllListeners());
+    }
+
+    _clear() {
+        super._clear();
+        this._buttons = [];
     }
 }

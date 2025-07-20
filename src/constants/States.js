@@ -1,6 +1,6 @@
-import Menu from '../states/Menu';
-import LevelSelect from '../states/LevelSelect';
-import Level from '../states/Level';
+import MenuState from '../states/MenuState';
+import LevelSelectState from '../states/LevelSelectState';
+import LevelState from '../states/LevelState';
 
 const States = {
     MENU: 'menu',
@@ -12,9 +12,9 @@ const States = {
 };
 
 export const StateViews = {
-    [States.MENU]: Menu,
-    [States.LEVEL_SELECT]: LevelSelect,
-    [States.LEVEL]: Level
+    [States.MENU]: MenuState,
+    [States.LEVEL_SELECT]: LevelSelectState,
+    [States.LEVEL]: LevelState
 }
 
 export default States;

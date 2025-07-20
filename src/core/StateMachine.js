@@ -1,5 +1,4 @@
 import Transitions from '../constants/Transitions';
-import eventBus from './EventBus';
 import Events from '../constants/Events';
 
 export default class StateMachine {
@@ -35,6 +34,6 @@ export default class StateMachine {
     }
 
     _addListeners() {
-        eventBus.on(Events.CHANGE_STATE, this._changeState, this);
+        app.on(Events.CHANGE_STATE, this._changeState, this);
     }
 }

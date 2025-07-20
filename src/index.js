@@ -1,6 +1,5 @@
 import {Text} from 'pixi.js';
 import {StateViews} from './constants/States';
-import eventBus from './core/EventBus';
 import Events from './constants/Events';
 import './styles.scss';
 import App from './core/App';
@@ -41,7 +40,7 @@ function log() {
     const styleArgs = 'color: #34495e;';
 
     Object.keys(Events).forEach((name) => {
-        eventBus.on(name, (...args) => {
+        app.on(name, (...args) => {
             if (name === 'RESIZE') return;
 
             let formatString = `%c${name}%c`;
