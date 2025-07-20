@@ -28,7 +28,6 @@ export default class StateMachine {
         }
 
         this._currentState = new this._states[name](name);
-        app.currentState = this._currentState;
         app.stage.addChild(this._currentState);
         this._currentState.enter(stateConfig);
     }

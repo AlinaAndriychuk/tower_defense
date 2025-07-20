@@ -21,7 +21,7 @@ export default class Enemy extends Container {
     _createComponents() {
         const animationType = 'move';
         this._animatedSprite = new AnimatedSprite(this._getAnimation(animationType));
-        this._animatedSprite.animationSpeed = 0.1;
+        this._animatedSprite.animationSpeed = this._enemyConfig.animationSpeed;
         this._animatedSprite.play();
         this.addChild(this._animatedSprite);
     }
@@ -53,6 +53,8 @@ export default class Enemy extends Container {
         const distance = Math.sqrt(dx * dx + dy * dy);
         const duration = distance / this._enemyConfig.speed;
 
+        this._rotate(x);
+
         if (sort) {
             this.emit(Events.SORT_ENEMY, this, sort)
         }
@@ -71,6 +73,14 @@ export default class Enemy extends Container {
                 }
             }
         });
+    }
+
+    _rotate(x = 0) {
+        if (this.x > x) {
+            this.scale.x = -1;
+        } else if (this.x < x) {
+            this.scale.x = 1;
+        }
     }
 
     destroy(options= {}) {

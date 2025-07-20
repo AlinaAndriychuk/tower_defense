@@ -1,14 +1,13 @@
 const config = {
     lang: 'en',
     entryState: 'menu',
-    app: {
+    renderer: {
         antialias: false,
         backgroundAlpha: 0,
         backgroundColor: 0x000000,
         clearBeforeRender: true,
-        forceCanvas: false,
-        resizeTo: window,
-        resolution: 1
+        resolution: window.devicePixelRatio || 1,
+        autoDensity: true,
     },
     state: {
         width: 960,
@@ -39,6 +38,9 @@ const config = {
         levels: [
             {
                 id: 0,
+                lives: 10,
+                coins: 10,
+                startDuration: 10,
                 path: [
                     { x: 591, y: 80 },
                     { x: 591, y: 177 },
@@ -53,7 +55,10 @@ const config = {
                     { x: 720, y: 334 },
                 ],
                 waves: [
-                    {enemies: [{type: 'medusa', count: 10}]},
+                    {
+                        enemies: [{type: 'medusa', count: 10}],
+                        duration: 20,
+                    },
                 ]
             }
         ]
@@ -61,16 +66,33 @@ const config = {
     enemies: {
         medusa: {
             health: 150,
-            speed: 200,
-            delay: 0.2
+            speed: 150,
+            delay: 0.2,
+            damage: 1,
+            animationSpeed: 0.15
         },
     },
     hud: {
-        width: 100,
-        height: 100,
+        width: 150,
+        height: 80,
         color: 0x000000,
-        alpha: 0.3
-    }
+        alpha: 0.3,
+        stats: {
+            x: 5,
+            coins: {
+                y: 5
+            },
+            lives: {
+                y: 22
+            },
+            waveNumber: {
+                y: 39
+            },
+            waveTimer: {
+                y: 56
+            }
+        }
+    },
 };
 
 export default config;

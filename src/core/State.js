@@ -17,7 +17,6 @@ export default class State extends Container {
     }
 
     exit() {
-        this._removeListeners();
         this._clear();
         this.removeFromParent();
         this.destroy({children: true});
@@ -32,6 +31,7 @@ export default class State extends Container {
     }
 
     _clear() {
+        this._removeListeners();
         this._stateName = '';
     }
 

@@ -4,11 +4,14 @@ import Events from './constants/Events';
 import './styles.scss';
 import App from './core/App';
 import {gsap} from 'gsap';
+import { initDevtools } from '@pixi/devtools';
 
 window.gsap = gsap;
 const app = window.app = new App();
-
 app.start(StateViews);
+
+// Devtools
+initDevtools({ renderer: app._renderer, stage: app.stage });
 
 // Coordinates
 window.showCoords = function showCoords() {

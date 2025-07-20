@@ -4,6 +4,10 @@ const Events = {
 
     SORT_ENEMY: 'SORT_ENEMY',
     DESTROY_ENEMY: 'DESTROY_ENEMY',
+
+    UPDATE_STATS: 'UPDATE_STATS',
+    UPDATE_COINS: 'UPDATE_COINS',
+    UPDATE_LIVES: 'UPDATE_LIVES',
 };
 
 export default Events;

@@ -1,33 +1,41 @@
-import {Application, Assets, EventEmitter} from 'pixi.js';
+import {Container, Assets, EventEmitter, autoDetectRenderer, Ticker} from 'pixi.js';
 import i18n from '../helpers/i18n';
 import config from '../config';
 import manifest from '../manifest';
 import Events from '../constants/Events';
 import StateMachine from './StateMachine';
-import State from './State';
-
 
 export default class App extends EventEmitter {
     constructor() {
         super();
 
-        this._app = null;
-        this._currentState = null;
+        this._renderer = null;
+        this._stage = null;
+        this._ticker = Ticker.shared;
     }
 
     async start(states = {}) {
         i18n.setLang(config.lang);
-        await this._createApplication();
+        await this._createRenderer();
+        this._createStage();
         await this._loadAssets();
         this._createStateMachine(states);
 
         this._addListeners();
+        this._resize();
     }
 
-    async _createApplication() {
-        this._app = new Application();
-        await this._app.init(config.app);
-        document.getElementById('game-container').appendChild(this._app.canvas);
+    async _createRenderer() {
+        this._renderer = await autoDetectRenderer(config.renderer);
+        document.getElementById('game-container').appendChild(this._renderer.canvas);
+    }
+
+    _createStage() {
+        this._stage = new Container();
+
+        this._ticker.add(() => {
+            this._renderer.render(this._stage);
+        });
     }
 
     async _loadAssets() {
@@ -52,32 +60,23 @@ export default class App extends EventEmitter {
     }
 
     _resize() {
-        this._app.renderer.resize(window.innerWidth, window.innerHeight);
+        this._renderer.resize(window.innerWidth, window.innerHeight);
         app.emit(Events.RESIZE, this.width, this.height);
     }
 
-    get currentState() {
-        return this._currentState;
-    }
-
-    set currentState(state) {
-        if (!(state instanceof State)) {
-            console.error(`Can not set  ${state} as currentState. ${state} is not instanceof ${State}`);
-            return;
-        }
-
-        this._currentState = state;
+    get ticker() {
+        return this._ticker;
     }
 
     get width() {
-        return this._app.renderer.width;
+        return this._renderer.width;
     }
 
     get height() {
-        return this._app.renderer.height;
+        return this._renderer.height;
     }
 
     get stage() {
-        return this._app.stage;
+        return this._stage;
     }
 }

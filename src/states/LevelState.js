@@ -3,52 +3,61 @@ import State from '../core/State';
 import EnemyContainer from '../components/EnemyContainer';
 import HUD from '../components/HUD';
 import WaveController from '../controllers/WaveController';
+import Events from '../constants/Events';
+import PlayerStats from '../core/PlayerStats';
 
 export default class LevelState extends State {
     constructor(name = '') {
         super(name);
 
-        this._id = null;
+        this._levelConfig = null;
         this._currentWaveId = null;
         this._enemyManager = null;
-        this._wavesConfig = [];
-        this._path = [];
+        this._hud = null;
+        this._playerStats = null;
+        this._wave = null;
     }
 
     enter(levelConfig = {}) {
-        this._id = levelConfig.id;
-        this._wavesConfig = levelConfig.waves;
-        this._path = levelConfig.path;
-
-        this._createComponents();
-        this._createEnemyManager();
+        this._levelConfig = levelConfig;
+        super.enter(levelConfig);
         this._callNextWave();
-        this._addListeners();
-        this._setPivot();
-        this._resize(app.width, app.height);
     }
 
     _createComponents() {
         this._createBackground();
+        this._createEnemyContainer();
         this._createHUD();
+        this._createPlayerStats();
     }
 
     _createBackground() {
-        this.addChild(new Sprite(Assets.get(`level_${this._id}`)));
+        this.addChild(new Sprite(Assets.get(`level_${this._levelConfig.id}`)));
     }
 
-    _createHUD() {
-        this.addChild(new HUD());
-    }
-
-    _createEnemyManager() {
+    _createEnemyContainer() {
         this._enemyContainer = new EnemyContainer();
         this.addChild(this._enemyContainer);
     }
 
+    _createHUD() {
+        this._hud = this.addChild(new HUD());
+    }
+
+    _createPlayerStats() {
+        this._playerStats = new PlayerStats(this._levelConfig.coins, this._levelConfig.lives);
+    }
+
     _callNextWave() {
         this._setCurrentWaveId();
-        new WaveController(this._enemyContainer, this._wavesConfig[this._currentWaveId], this._path);
+        const waveConfig = this._levelConfig.waves[this._currentWaveId];
+
+        app.emit(Events.UPDATE_STATS, {
+            waveNumber: this._currentWaveId + 1,
+            waveTimer: waveConfig.duration,
+        });
+
+        this._wave = new WaveController(this._enemyContainer, waveConfig, this._levelConfig.path);
     }
 
     _setCurrentWaveId() {
@@ -59,12 +68,17 @@ export default class LevelState extends State {
         }
     }
 
+    _resize(width = 0, height = 0) {
+        super._resize(width, height);
+        this._hud.resize(width, height);
+    }
+
     _clear() {
         super._clear();
-        this._id = null;
+        this._levelConfig = null;
         this._currentWaveId = null;
         this._enemyManager = null;
-        this._wavesConfig = [];
-        this._path = [];
+        this._hud = null;
+        this._wave = null;
     }
 }
