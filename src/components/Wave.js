@@ -1,10 +1,12 @@
 import Enemy from './Enemy';
+import utils from '../helpers/utils';
+import config from '../config';
 
 export default class Wave {
-    constructor(waveConfig, path) {
+    constructor(enemyManager, waveConfig = {}, path = []) {
+        this._enemyManager = enemyManager;
         this._waveConfig = waveConfig;
-        this._path = path;
-        this._enemyCounter = 0;
+        this._path = waveConfig.path ?? path;
 
         this._init();
     }
@@ -14,12 +16,19 @@ export default class Wave {
     }
 
     _spawnEnemies() {
-        this._waveConfig.enemies.forEach(({ type, count }) => {
+        this._waveConfig.enemies.forEach( async ({ type, count }) => {
             for (let i = 0; i < count; i++) {
-                const enemy = new Enemy(type);
-                enemy.spawn(this._path[0].x, this._path[0].y);
-                enemy.move(this._path);
+                this._enemyManager.spawnEnemy(type, this._path);
+
+                const enemyConfig = config.enemies[type];
+                await utils.wait(enemyConfig.delay);
             }
         });
+    }
+
+    _clear() {
+        this._enemyManager = null;
+        this._waveConfig = null;
+        this._path = [];
     }
 }

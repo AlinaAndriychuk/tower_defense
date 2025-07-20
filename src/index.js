@@ -4,7 +4,9 @@ import eventBus from './core/EventBus';
 import Events from './constants/Events';
 import './styles.scss';
 import App from './core/App';
+import {gsap} from 'gsap';
 
+window.gsap = gsap;
 const app = window.app = new App();
 
 app.start(StateViews);

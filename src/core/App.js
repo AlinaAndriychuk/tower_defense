@@ -56,11 +56,10 @@ export default class App {
     }
 
     _clear() {
-        this._app.destroy(true, true);
         this._currentState = null;
     }
 
-    get currentState() {
+    get currentState() { // todo remove if is not used
         return this._currentState;
     }
 

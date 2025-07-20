@@ -9,7 +9,7 @@ export default class StateMachine {
         this._addListeners();
     }
 
-    addState(name, state) {
+    addState(name = '', state) {
         this._states[name] = state;
     }
 

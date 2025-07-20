@@ -28,6 +28,9 @@ const utils = {
         const bounds = target.getLocalBounds();
         target.pivot.set(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
         target.position.set(width / 2, height / 2);
+    },
+    wait(time) {
+        return new Promise(res => gsap.delayedCall(time, res));
     }
 };
 

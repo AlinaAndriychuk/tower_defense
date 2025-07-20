@@ -1,13 +1,15 @@
 import State from '../core/State';
 import {Assets, Sprite} from 'pixi.js';
 import Wave from '../components/Wave';
+import EnemyContainer from '../components/EnemyContainer';
 
 export default class Level extends State {
-    constructor(name) {
+    constructor(name = '') {
         super(name);
 
         this._id = null;
         this._currentWaveId = null;
+        this._enemyManager = null;
         this._wavesConfig = [];
         this._path = [];
     }
@@ -18,6 +20,7 @@ export default class Level extends State {
         this._path = levelConfig.path;
 
         this._createComponents();
+        this._createEnemyManager();
         this._callNextWave();
         this._addListeners();
         this._setPivot();
@@ -33,9 +36,14 @@ export default class Level extends State {
         this.addChild(back);
     }
 
+    _createEnemyManager() {
+        this._enemyContainer = new EnemyContainer();
+        this.addChild(this._enemyContainer);
+    }
+
     _callNextWave() {
         this._setCurrentWaveId();
-        const wave = new Wave(this._wavesConfig[this._currentWaveId], this._path);
+        const wave = new Wave(this._enemyContainer, this._wavesConfig[this._currentWaveId], this._path);
     }
 
     _setCurrentWaveId() {
@@ -50,6 +58,7 @@ export default class Level extends State {
         super._clear();
         this._id = null;
         this._currentWaveId = null;
+        this._enemyManager = null;
         this._wavesConfig = [];
         this._path = [];
     }

@@ -8,7 +8,7 @@ const config = {
         clearBeforeRender: true,
         forceCanvas: false,
         resizeTo: window,
-        resolution: 1,
+        resolution: 1
     },
     state: {
         width: 960,
@@ -42,18 +42,18 @@ const config = {
                 path: [
                     { x: 591, y: 80 },
                     { x: 591, y: 177 },
-                    { x: 368, y: 177 },
+                    { x: 368, y: 177, sort: 'backToFront' },
                     { x: 368, y: 431 },
                     { x: 624, y: 431 },
-                    { x: 624, y: 237 },
-                    { x: 432, y: 237 },
+                    { x: 624, y: 237, sort: 'backToFront' },
+                    { x: 432, y: 237, sort: 'frontToBack' },
                     { x: 432, y: 367 },
                     { x: 561, y: 367 },
-                    { x: 561, y: 334 },
+                    { x: 561, y: 334, sort: 'backToFront' },
                     { x: 720, y: 334 },
                 ],
                 waves: [
-                    {enemies: [{type: 'medusa', count: 1}]},
+                    {enemies: [{type: 'medusa', count: 10}]},
                 ]
             }
         ]
@@ -61,7 +61,7 @@ const config = {
     enemies: {
         medusa: {
             health: 150,
-            speed: 100,
+            speed: 200,
             delay: 2
         },
     }

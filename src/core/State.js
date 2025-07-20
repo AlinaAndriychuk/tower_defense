@@ -5,7 +5,7 @@ import utils from '../helpers/utils';
 import config from '../config';
 
 export default class State extends Container {
-    constructor(name) {
+    constructor(name = '') {
         super();
         this._stateName = name;
     }
@@ -33,7 +33,7 @@ export default class State extends Container {
     }
 
     _clear() {
-
+        this._stateName = '';
     }
 
     _removeListeners() {
@@ -44,7 +44,7 @@ export default class State extends Container {
         this.pivot.set(config.state.pivot.x, config.state.pivot.y);
     }
 
-    _resize(width, height) {
+    _resize(width = 0, height = 0) {
         utils.scaleToCover({
             target: this,
             width,
