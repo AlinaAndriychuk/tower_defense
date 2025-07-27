@@ -5,4 +5,5 @@ export default {
     LIVES: 'Lives:',
     WAVE: 'Wave:',
     NEXT_WAVE: 'Next Wave:',
+    COST: 'Cost:',
 };

@@ -63,15 +63,24 @@ const config = {
             }
         ]
     },
-    enemies: {
+    characters: {
         medusa: {
-            health: 150,
+            animationSpeed: 0.15,
             speed: 150,
+            health: 150,
             delay: 0.2,
             damage: 1,
-            animationSpeed: 0.15
+        },
+        ariel: {
+            animationSpeed: 0.15,
+            speed: 150,
+            coins: 25,
+            attack: 10,
+            delay: 0.2,
+            damage: 1,
         },
     },
+    defenders: ['ariel'],
     hud: {
         width: 150,
         height: 80,
@@ -93,6 +102,22 @@ const config = {
             }
         }
     },
+    card_container: {
+        width: 89.6,
+        height: 128,
+        y: 85,
+        color: 0x000000,
+        alpha: 0.3,
+    },
+    card: {
+        text: {
+            x: 5,
+            y: 100
+        },
+        character: {
+            scale: 0.7
+        }
+    }
 };
 
 export default config;

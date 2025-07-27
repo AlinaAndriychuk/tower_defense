@@ -1,0 +1,183 @@
+{
+  "frames": {
+    "ariel_idle_05.png": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 65,
+        "h": 85
+      },
+      "rotated": true,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 32,
+        "y": 43,
+        "w": 65,
+        "h": 85
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 128
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ariel_idle_04.png": {
+      "frame": {
+        "x": 85,
+        "y": 0,
+        "w": 65,
+        "h": 83
+      },
+      "rotated": true,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 32,
+        "y": 45,
+        "w": 65,
+        "h": 83
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 128
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ariel_idle_03.png": {
+      "frame": {
+        "x": 168,
+        "y": 0,
+        "w": 65,
+        "h": 81
+      },
+      "rotated": true,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 32,
+        "y": 47,
+        "w": 65,
+        "h": 81
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 128
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ariel_idle_06.png": {
+      "frame": {
+        "x": 249,
+        "y": 0,
+        "w": 65,
+        "h": 81
+      },
+      "rotated": true,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 32,
+        "y": 47,
+        "w": 65,
+        "h": 81
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 128
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ariel_idle_02.png": {
+      "frame": {
+        "x": 330,
+        "y": 0,
+        "w": 65,
+        "h": 80
+      },
+      "rotated": true,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 32,
+        "y": 48,
+        "w": 65,
+        "h": 80
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 128
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ariel_idle_01.png": {
+      "frame": {
+        "x": 410,
+        "y": 0,
+        "w": 65,
+        "h": 78
+      },
+      "rotated": true,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 32,
+        "y": 50,
+        "w": 65,
+        "h": 78
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 128
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ariel_idle_00.png": {
+      "frame": {
+        "x": 488,
+        "y": 0,
+        "w": 65,
+        "h": 77
+      },
+      "rotated": true,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 32,
+        "y": 51,
+        "w": 65,
+        "h": 77
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 128
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  },
+  "meta": {
+    "app": "http://free-tex-packer.com",
+    "version": "0.6.7",
+    "image": "ariel_idle.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 565,
+      "h": 65
+    },
+    "scale": 1
+  }
+}

@@ -40,6 +40,15 @@ const manifest = {
                 },
             ],
         },
+        {
+            name: 'defenders',
+            assets: [
+                {
+                    alias: 'ariel_idle',
+                    src: './assets/ariel_idle.json',
+                },
+            ],
+        },
     ]
 };
 

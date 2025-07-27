@@ -11,13 +11,26 @@ export default class EnemyContainer extends Container{
     spawnEnemy(type = '', path = []) {
         const enemy = new Enemy(type);
         enemy.spawn(path[0].x, path[0].y);
-        enemy.move(path);
-
-        enemy.on(Events.SORT_ENEMY, this._sortEnemy, this);
-        enemy.on(Events.DESTROY_ENEMY, this._destroyEnemy, this);
-
+        this._moveEnemy(enemy, path);
         this._enemies.push(enemy);
         this.addChildAt(enemy, 0);
+    }
+
+    _moveEnemy(enemy, path = [], currentStep = 0) {
+        if (currentStep === path.length - 1) {
+            return this._destroyEnemy(enemy);
+        }
+
+        currentStep++;
+        if (!path[currentStep]) return;
+
+        const {x = 0, y = 0, sort = ''} = path[currentStep];
+
+        if (sort) {
+            this._sortEnemy(enemy, sort);
+        }
+
+        enemy.move(x, y).then(() => this._moveEnemy(enemy, path, currentStep));
     }
 
     _sortEnemy(enemy, sort = '') {
@@ -29,9 +42,8 @@ export default class EnemyContainer extends Container{
         }
     }
 
-    _destroyEnemy(enemy) {
+    _destroyEnemy(enemy) { // todo maybe make one parent container for enemy and defender containers
         this._enemies.splice(this._enemies.indexOf(enemy), 1);
-        enemy.removeAllListeners();
         enemy.destroy();
     }
 

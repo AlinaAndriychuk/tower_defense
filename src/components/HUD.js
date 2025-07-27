@@ -40,11 +40,11 @@ export default class HUD extends Container {
     }
 
     _createCoinsText() {
-        const text = new Text({text: i18n.get('COINS'), style: Styles.HUD.TITLE});
+        const text = new Text({text: i18n.get('COINS'), style: Styles.DEFAULT.TITLE});
         text.y = config.hud.stats.coins.y;
         text.x = config.hud.stats.x;
 
-        this._coinsText = new Text({text: '0', style: Styles.HUD.STATS});
+        this._coinsText = new Text({text: '0', style: Styles.DEFAULT.VALUE});
         this._coinsText.anchor.x = 1;
         this._coinsText.x = this.width - config.hud.stats.x;
         this._coinsText.y = config.hud.stats.coins.y;
@@ -52,11 +52,11 @@ export default class HUD extends Container {
     }
 
     _createLivesText() {
-        const text = new Text({text: i18n.get('LIVES'), style: Styles.HUD.TITLE});
+        const text = new Text({text: i18n.get('LIVES'), style: Styles.DEFAULT.TITLE});
         text.y = config.hud.stats.lives.y;
         text.x = config.hud.stats.x;
 
-        this._livesText = new Text({text: '0', style: Styles.HUD.STATS});
+        this._livesText = new Text({text: '0', style: Styles.DEFAULT.VALUE});
         this._livesText.anchor.x = 1;
         this._livesText.x = this.width - config.hud.stats.x;
         this._livesText.y = config.hud.stats.lives.y;
@@ -64,11 +64,11 @@ export default class HUD extends Container {
     }
 
     _createWaveNumberText() {
-        const text = new Text({text: i18n.get('WAVE'), style: Styles.HUD.TITLE});
+        const text = new Text({text: i18n.get('WAVE'), style: Styles.DEFAULT.TITLE});
         text.y = config.hud.stats.waveNumber.y;
         text.x = config.hud.stats.x;
 
-        this._waveNumberText = new Text({text: '0', style: Styles.HUD.STATS});
+        this._waveNumberText = new Text({text: '0', style: Styles.DEFAULT.VALUE});
         this._waveNumberText.anchor.x = 1;
         this._waveNumberText.x = this.width - config.hud.stats.x;
         this._waveNumberText.y = config.hud.stats.waveNumber.y;
@@ -76,11 +76,11 @@ export default class HUD extends Container {
     }
 
     _createWaveTimerText() {
-        const text = new Text({text: i18n.get('NEXT_WAVE'), style: Styles.HUD.TITLE});
+        const text = new Text({text: i18n.get('NEXT_WAVE'), style: Styles.DEFAULT.TITLE});
         text.y = config.hud.stats.waveTimer.y;
         text.x = config.hud.stats.x;
 
-        this._waveTimerText = new Text({text: this._formatTime(this._waveTimer), style: Styles.HUD.STATS});
+        this._waveTimerText = new Text({text: this._formatTime(this._waveTimer), style: Styles.DEFAULT.VALUE});
         this._waveTimerText.anchor.x = 1;
         this._waveTimerText.x = this.width - config.hud.stats.x;
         this._waveTimerText.y = config.hud.stats.waveTimer.y;

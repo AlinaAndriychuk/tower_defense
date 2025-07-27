@@ -22,7 +22,7 @@ export default class WaveController {
                 if (this._isStopped) return;
 
                 this._enemyManager.spawnEnemy(type, this._path);
-                const enemyConfig = config.enemies[type];
+                const enemyConfig = config.characters[type];
                 await utils.wait(enemyConfig.delay);
             }
         });
