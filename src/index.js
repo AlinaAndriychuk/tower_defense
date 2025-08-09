@@ -5,6 +5,7 @@ import './styles.scss';
 import App from './core/App';
 import {gsap} from 'gsap';
 import { initDevtools } from '@pixi/devtools';
+import config from './config';
 
 window.gsap = gsap;
 const app = window.app = new App();
@@ -25,17 +26,46 @@ window.showCoords = function showCoords() {
     });
     app.stage.addChild(tooltip);
 
-    app.currentState.eventMode = 'static';
-    app.currentState.cursor = 'pointer';
+    const container = app.stage.children[0];
+    container.eventMode = 'static';
+    container.cursor = 'pointer';
 
-    app.currentState.on('pointermove', (event) => {
+    container.on('pointermove', (event) => {
         const globalPos = event.global;
-        const localPos =  app.currentState.toLocal(globalPos);
+        const localPos =  container.toLocal(globalPos);
 
         tooltip.text = `coords: (${localPos.x.toFixed(1)}, ${localPos.y.toFixed(1)})`;
         tooltip.position.set(globalPos.x + 10, globalPos.y + 10);
     });
 }
+
+// Cells
+window.showCellCords = function showCellCords() {
+    const tooltip = new Text({
+        text: '',
+        style: {
+            fontSize: 14,
+            fill: '#ffffff',
+            stroke: '#000000'
+        }
+    });
+    app.stage.addChild(tooltip);
+
+    const container = app.stage.children[0];
+    container.eventMode = 'static';
+    container.cursor = 'pointer';
+
+    container.on('pointermove', (event) => {
+        const globalPos = event.global;
+        const localPos = container.toLocal(globalPos);
+
+        const gridX = Math.floor(localPos.x / config.cell.width);
+        const gridY = Math.floor(localPos.y / config.cell.height);
+
+        tooltip.text = `cell: (${gridX}, ${gridY})`;
+        tooltip.position.set(globalPos.x + 10, globalPos.y + 10);
+    });
+};
 
 // Logging
 function log() {

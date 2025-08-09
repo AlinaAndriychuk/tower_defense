@@ -42,18 +42,22 @@ const config = {
                 coins: 10,
                 startDuration: 10,
                 path: [
-                    { x: 591, y: 80 },
-                    { x: 591, y: 177 },
-                    { x: 368, y: 177 },
-                    { x: 368, y: 431 },
-                    { x: 624, y: 431 },
-                    { x: 624, y: 237, sort: 'backToFront' },
-                    { x: 432, y: 237, sort: 'frontToBack' },
-                    { x: 432, y: 367 },
-                    { x: 561, y: 367 },
-                    { x: 561, y: 334, sort: 'backToFront' },
-                    { x: 720, y: 334 },
+                    { x: 606, y: 80 },
+                    { x: 606, y: 190 },
+                    { x: 355, y: 190 },
+                    { x: 355, y: 446 },
+                    { x: 639, y: 446 },
+                    { x: 639, y: 252, sort: 'backToFront' },
+                    { x: 420, y: 252, sort: 'frontToBack' },
+                    { x: 420, y: 382 },
+                    { x: 574, y: 382 },
+                    { x: 574, y: 349, sort: 'backToFront' },
+                    { x: 735, y: 349 },
                 ],
+                cells: {
+                    start: {x: 9, y: 3},
+                    end: {x: 21, y: 15},
+                },
                 waves: [
                     {
                         enemies: [{type: 'medusa', count: 10}],
@@ -64,16 +68,18 @@ const config = {
         ]
     },
     characters: {
+        speedCoefficient: 100,
+        scale: 0.5,
         medusa: {
             animationSpeed: 0.15,
-            speed: 150,
+            speed: 100,
             health: 150,
             delay: 0.2,
             damage: 1,
         },
         ariel: {
             animationSpeed: 0.15,
-            speed: 150,
+            speed: 1000,
             coins: 25,
             attack: 10,
             delay: 0.2,
@@ -117,7 +123,11 @@ const config = {
         character: {
             scale: 0.7
         }
-    }
+    },
+    cell: {
+        width: 32,
+        height: 32,
+    },
 };
 
 export default config;

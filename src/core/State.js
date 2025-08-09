@@ -36,6 +36,7 @@ export default class State extends Container {
     }
 
     _removeListeners() {
+        this.removeAllListeners();
         app.off(Events.RESIZE, this._resize, this);
     }
 

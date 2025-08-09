@@ -46,8 +46,8 @@ export default class DefenderCard extends Container {
     }
 
     _addListeners() {
-        this.on('pointerdown', () => {
-            app.emit(Events.PLACE_DEFENDER, this._type);
+        this.on('pointerdown', (event) => {
+            app.emit(Events.SPAWN_DEFENDER, {type: this._type, event});
         });
     }
 

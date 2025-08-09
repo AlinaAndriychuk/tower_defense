@@ -27,6 +27,16 @@ const Styles = {
             stroke: 0x000000
         }
     },
+    LEVEL: {
+        DIVIDER: {
+            width: 0.5,
+            color: 0x000000,
+            alpha: 0.1,
+            join: 'round',
+            cap: 'round',
+            alignment: 0.5
+        }
+    }
 }
 
 export default Styles;

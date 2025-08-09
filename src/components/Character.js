@@ -20,6 +20,7 @@ export default class Character extends Container {
     _createAnimatedSprite(animationType = '') {
         this._animatedSprite = new AnimatedSprite(this._getAnimation(animationType));
         this._animatedSprite.animationSpeed = this._characterConfig.animationSpeed;
+        this._animatedSprite.scale.set(config.characters.scale);
         this.addChild(this._animatedSprite);
     }
 
@@ -43,18 +44,8 @@ export default class Character extends Container {
     move(x= 0, y = 0) {
         if (this.destroyed) return;
 
-        const dx = x - this.x;
-        const dy = y - this.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const duration = distance / this._characterConfig.speed;
-
-        this._rotate(x);
-
-        if (this.destroyed) return; // if it was removed between this function execution
-
-        if (this._type === 'ariel') {
-            console.log(x, y)
-        }
+        const duration = config.characters.speedCoefficient / this._characterConfig.speed;
+        gsap.killTweensOf(this);
         return gsap.to(this, {
             x,
             y,
