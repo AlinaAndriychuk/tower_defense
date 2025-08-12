@@ -38,12 +38,13 @@ export default class DefenderContainer extends Container{
         this._getLastDefender()?.showEnabled();
     }
 
-    activateDefender() {
+    buyDefender() {
         const defender = this._getLastDefender();
         if (!defender) return;
 
         this._readyDefenders.push(defender);
         defender.activate();
+        defender.buy();
         defender.on(Events.DEFENDER_COOLDOWN_START, this._removeDefenderReady, this);
         defender.on(Events.DEFENDER_COOLDOWN_COMPLETE, this._setDefenderReady, this);
     }

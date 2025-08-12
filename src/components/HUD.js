@@ -101,22 +101,30 @@ export default class HUD extends Container {
     }
 
     _addListeners() {
-        app.on(Events.UPDATE_STATS, this._updateStats, this);
+        app.on(Events.UPDATE_WAVE_STATS, this._updateWaveStats, this);
+        app.on(Events.COINS_UPDATED, this._updateCoins, this);
+        app.on(Events.LIVES_UPDATED, this._updateLives, this);
     }
 
-    _updateStats({coins, lives, waveNumber, waveTimer}) {
-        if (coins) this._coinsText.text = coins;
-        if (lives) this._livesText.text = lives;
-        if (waveNumber) this._waveNumberText.text = waveNumber;
-        if (waveTimer) {
-            this._waveTimer = waveTimer;
-            app.ticker.remove(this._updateWaveTimer, this);
-            app.ticker.add(this._updateWaveTimer, this);
-        }
+    _updateWaveStats(waveNumber = 0, waveTimer = 0) {
+        this._waveNumberText.text = waveNumber;
+        this._waveTimer = waveTimer;
+        app.ticker.remove(this._updateWaveTimer, this);
+        app.ticker.add(this._updateWaveTimer, this);
+    }
+
+    _updateCoins(coins = 0) {
+        this._coinsText.text = coins;
+    }
+
+    _updateLives(lives = 0) {
+        this._livesText.text = lives;
     }
 
     _removeListeners() {
-        app.off(Events.UPDATE_STATS, this._updateStats, this);
+        app.off(Events.UPDATE_WAVE_STATS, this._updateWaveStats, this);
+        app.off(Events.COINS_UPDATED, this._updateCoins, this);
+        app.off(Events.LIVES_UPDATED, this._updateLives, this);
     }
 
     resize(width = 0, height = 0) {

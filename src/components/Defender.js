@@ -49,6 +49,10 @@ export default class Defender extends Character {
         this._collision.alpha = 0.2; // todo set to 0
     }
 
+    buy() {
+        app.emit(Events.UPDATE_COINS, -this._characterConfig.coins);
+    }
+
     async attack(enemies = []) {
         const now = performance.now();
 

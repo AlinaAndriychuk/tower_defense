@@ -39,7 +39,7 @@ const config = {
             {
                 id: 0,
                 lives: 10,
-                coins: 10,
+                coins: 50,
                 startDuration: 10,
                 path: [
                     { x: 606, y: 80 },
@@ -150,6 +150,9 @@ const config = {
         },
         character: {
             scale: 0.7
+        },
+        disabled: {
+            alpha: 0.5
         }
     },
     cell: {

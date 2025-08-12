@@ -82,7 +82,9 @@ export default class LevelState extends State {
     }
 
     _createPlayerStats() {
-        this._playerStats = new PlayerStats(this._levelConfig.coins, this._levelConfig.lives);
+        this._playerStats = new PlayerStats();
+        app.emit(Events.UPDATE_COINS, this._levelConfig.coins);
+        app.emit(Events.UPDATE_LIVES, this._levelConfig.lives);
     }
 
     _createCardContainer() {
@@ -126,11 +128,7 @@ export default class LevelState extends State {
         this._setCurrentWaveId();
         const waveConfig = this._levelConfig.waves[this._currentWaveId];
 
-        app.emit(Events.UPDATE_STATS, {
-            waveNumber: this._currentWaveId + 1,
-            waveTimer: waveConfig.duration,
-        });
-
+        app.emit(Events.UPDATE_WAVE_STATS, this._currentWaveId + 1, waveConfig.duration);
         this._wave = new WaveController(this._enemyContainer, waveConfig, this._levelConfig.path);
     }
 
@@ -183,7 +181,7 @@ export default class LevelState extends State {
 
         this.on('pointermove', this._moveDefender, this);
         this.once('pointerup', () => {
-            this.on('pointerdown', this._placeDefender, this);
+            this.on('pointerdown', this._buyDefender, this);
         }, this);
 
         const {x, y} =  this._getPossibleDefenderLocalPos(event);
@@ -241,7 +239,7 @@ export default class LevelState extends State {
         return { x: snappedX, y: snappedY };
     }
 
-    _placeDefender(event) {
+    _buyDefender(event) {
         const pos = this._getPossibleDefenderLocalPos(event);
         const cell = this._getCellPos(pos);
 
@@ -252,9 +250,9 @@ export default class LevelState extends State {
         this._occupiedCells.push(cell);
         this.eventMode = 'passive';
         this.cursor = 'default';
-        this._defenderContainer.activateDefender();
+        this._defenderContainer.buyDefender();
         this.off('pointermove', this._moveDefender, this);
-        this.off('pointerdown', this._placeDefender, this);
+        this.off('pointerdown', this._buyDefender, this);
     }
 
     _destroyDefender(defender) {

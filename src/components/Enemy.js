@@ -60,16 +60,35 @@ export default class Enemy extends Character {
     }
 
     takeDamage(damage = 0) {
-        if (this._health - damage <= 0) {
-            gsap.killTweensOf(this);
-            app.emit(Events.UPDATE_COINS, this._characterConfig.coins);
+        if (this._isKilled()) return;
 
-            this._showCoins();
+        if (this._health - damage <= 0) {
+            this._kill();
             return;
         }
 
-        this._health -= damage;
+        this._setHealth(this._health - damage);
+    }
+
+    _setHealth(value = 0) {
+        this._health = value;
         this._healthIndictor.scale.x = this._health / this._characterConfig.health;
+    }
+
+    _kill() {
+        this._setHealth(0);
+        gsap.killTweensOf(this);
+        app.emit(Events.UPDATE_COINS, this._characterConfig.coins);
+        this._hideAllElements();
+        this._showCoins();
+    }
+
+    _hideAllElements() {
+        this.children.forEach(child => child.visible = false);
+    }
+
+    _isKilled() {
+        return this._health === 0;
     }
 
     _showCoins() {

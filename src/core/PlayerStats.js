@@ -1,17 +1,15 @@
 import Events from '../constants/Events';
 
 export default class PlayerStats {
-    constructor(coins = 0, lives = 0) {
-        this._coins = coins;
-        this._lives = lives;
+    constructor() {
+        this._coins = 0;
+        this._lives = 0;
 
         this._init();
     }
 
     _init() {
         this._addListeners();
-        this._updateCoins();
-        this._updateLives();
     }
 
     _addListeners() {
@@ -26,12 +24,12 @@ export default class PlayerStats {
 
     _updateCoins(coins = 0) {
         this._coins += coins;
-        app.emit(Events.UPDATE_STATS, {coins: this._coins});
+        app.emit(Events.COINS_UPDATED, this._coins);
     }
 
     _updateLives(lives = 0) {
         this._lives += lives;
-        app.emit(Events.UPDATE_STATS, {lives: this._lives});
+        app.emit(Events.LIVES_UPDATED, this._lives);
     }
 
     clear() {
