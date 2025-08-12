@@ -49,6 +49,6 @@ export default class LevelSelectState extends State {
 
     _clear() {
         super._clear();
-        this._cards = [];
+        this._cards = null;
     }
 }

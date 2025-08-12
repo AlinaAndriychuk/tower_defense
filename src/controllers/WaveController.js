@@ -36,6 +36,6 @@ export default class WaveController {
     _clear() {
         this._enemyManager = null;
         this._waveConfig = null;
-        this._path = [];
+        this._path = null;
     }
 }

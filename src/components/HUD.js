@@ -138,6 +138,6 @@ export default class HUD extends Container {
         this._livesText = null;
         this._waveNumberText = null;
         this._waveTimerText = null;
-        this._waveTimer = 0;
+        this._waveTimer = null;
     }
 }

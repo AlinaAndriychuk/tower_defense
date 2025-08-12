@@ -32,7 +32,7 @@ export default class State extends Container {
 
     _clear() {
         this._removeListeners();
-        this._stateName = '';
+        this._stateName = null;
     }
 
     _removeListeners() {

@@ -47,6 +47,10 @@ const manifest = {
                     alias: 'ariel_idle',
                     src: './assets/ariel_idle.json',
                 },
+                {
+                    alias: 'ariel_attack',
+                    src: './assets/ariel_attack.json',
+                },
             ],
         },
     ]

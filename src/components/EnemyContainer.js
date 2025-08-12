@@ -13,6 +13,7 @@ export default class EnemyContainer extends Container{
         enemy.spawn(path[0].x, path[0].y);
         this._moveEnemy(enemy, path);
         this._enemies.push(enemy);
+        enemy.on(Events.ENEMY_KILLED, this._destroyEnemy, this);
         this.addChildAt(enemy, 0);
     }
 
@@ -42,7 +43,7 @@ export default class EnemyContainer extends Container{
         }
     }
 
-    _destroyEnemy(enemy) { // todo maybe make one parent container for enemy and defender containers
+    _destroyEnemy(enemy) {
         this._enemies.splice(this._enemies.indexOf(enemy), 1);
         enemy.destroy();
     }
@@ -53,5 +54,9 @@ export default class EnemyContainer extends Container{
         this._enemies.forEach(enemy => this._destroyEnemy(enemy));
         this.removeFromParent();
         super.destroy({children: true});
+    }
+
+    get enemies() {
+        return this._enemies;
     }
 }

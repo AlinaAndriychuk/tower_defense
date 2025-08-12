@@ -36,6 +36,26 @@ const Styles = {
             cap: 'round',
             alignment: 0.5
         }
+    },
+    ENEMY: {
+        HEALTH_BAR: {
+            BORDER: {
+                width: 1.5,
+                color: 0x000000
+            },
+            EMPTY: {
+                color: 0xcf4055
+            },
+            FULL: {
+                color: 0x51cf40
+            },
+        },
+        COINS: {
+            fontFamily: 'Times New Roman',
+            fontSize: 15,
+            fill: 0xFBFFB0,
+            stroke: 0x000000
+        }
     }
 }
 

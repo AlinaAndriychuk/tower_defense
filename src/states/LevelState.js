@@ -30,7 +30,10 @@ export default class LevelState extends State {
     enter(levelConfig = {}) {
         this._levelConfig = levelConfig;
         super.enter(levelConfig);
+        this._createPlayerStats();
+        this._setDisabledCells();
         this._callNextWave();
+        app.ticker.add(this._attackEnemies, this);
     }
 
     _createComponents() {
@@ -39,9 +42,7 @@ export default class LevelState extends State {
         this._createEnemyContainer();
         this._createDefenderContainer();
         this._createHUD();
-        this._createPlayerStats();
         this._createCardContainer();
-        this._setDisabledCells();
     }
 
     _createBackground() {
@@ -86,6 +87,39 @@ export default class LevelState extends State {
 
     _createCardContainer() {
         this._cardContainer = this.addChild(new DefenderCardContainer());
+    }
+
+    _attackEnemies() {
+        this._defenderContainer.readyDefenders.forEach(defender => {
+            const enemiesInRange = this._getEnemiesInRange(defender);
+            if (enemiesInRange.length) {
+                defender.attack(enemiesInRange);
+            }
+        });
+    }
+
+    _getEnemiesInRange(defender) {
+        return this._enemyContainer.enemies.filter(enemy => {
+            if (!this._aabbOverlap(defender.position, defender.radiusX, defender.radiusY,
+                enemy.position, enemy.radiusX, enemy.radiusY)) {
+                return false;
+            }
+
+            const dx = enemy.position.x - defender.position.x;
+            const dy = enemy.position.y - defender.position.y;
+
+            const nx = dx / (defender.radiusX + enemy.radiusX);
+            const ny = dy / (defender.radiusY + enemy.radiusY);
+
+            return (nx * nx + ny * ny) <= 1;
+        });
+    }
+
+    _aabbOverlap(pos1, rx1, ry1, pos2, rx2, ry2) {
+        return (
+            Math.abs(pos1.x - pos2.x) <= rx1 + rx2 &&
+            Math.abs(pos1.y - pos2.y) <= ry1 + ry2
+        );
     }
 
     _callNextWave() {
@@ -140,6 +174,7 @@ export default class LevelState extends State {
     _addListeners() {
         super._addListeners();
         app.on(Events.SPAWN_DEFENDER, this._spawnDefender, this);
+        app.on(Events.DESTROY_DEFENDER, this._destroyDefender, this);
     }
 
     async _spawnDefender({type = '', event}) {
@@ -148,7 +183,7 @@ export default class LevelState extends State {
 
         this.on('pointermove', this._moveDefender, this);
         this.once('pointerup', () => {
-            this.once('pointerdown', this._placeDefender, this);
+            this.on('pointerdown', this._placeDefender, this);
         }, this);
 
         const {x, y} =  this._getPossibleDefenderLocalPos(event);
@@ -156,22 +191,33 @@ export default class LevelState extends State {
     }
 
     _moveDefender(event) {
-        const {x, y} =  this._getPossibleDefenderLocalPos(event);
-        this._defenderContainer.moveDefender(x, y);
+        const pos =  this._getPossibleDefenderLocalPos(event);
+        const cell = this._getCellPos(pos);
+
+        if (this._isDisabledCell(cell) || this._isOccupiedCell(cell)) {
+            this._defenderContainer.showDefenderDisabled();
+        } else {
+            this._defenderContainer.showDefenderEnabled();
+        }
+
+        this._defenderContainer.moveDefender(pos.x, pos.y);
     }
 
     _getPossibleDefenderLocalPos(event) {
         const globalPos = event.global;
         const localPos =  this.toLocal(globalPos);
-        const {x, y} = this._getCellPos(localPos);
+        let {x, y} = this._getCellPos(localPos);
 
-        if (this._disabledCells.some(cell => cell.x === x && cell.y === y)) {
-            this.off('pointerdown', this._placeDefender, this);
-        } else {
-            // this.once('pointerup', () => {
-            //     console.log('pointerdown');
-            //     this.on('pointerdown', this._placeDefender, this);
-            // }, this);
+        if (this._levelConfig.cells.start.x > x) {
+            localPos.x = this._getLocalPosFromCell({x: this._levelConfig.cells.start.x}).x;
+        } else if (this._levelConfig.cells.end.x < x) {
+            localPos.x = this._getLocalPosFromCell({x: this._levelConfig.cells.end.x}).x;
+        }
+
+        if (this._levelConfig.cells.start.y > y) {
+            localPos.y = this._getLocalPosFromCell({y: this._levelConfig.cells.start.y}).y;
+        } if (this._levelConfig.cells.end.y < y) {
+            localPos.y = this._getLocalPosFromCell({y: this._levelConfig.cells.end.y}).y;
         }
 
         return this._snapToCellCenterBottom(localPos.x, localPos.y);
@@ -183,28 +229,63 @@ export default class LevelState extends State {
         return {x: cellX, y: cellY};
     }
 
+    _getLocalPosFromCell({x = 0, y = 0}) {
+        const posX = Math.floor(x * config.cell.width);
+        const posY = Math.floor(y * config.cell.height);
+        return {x: posX, y: posY};
+    }
+
     _snapToCellCenterBottom(x = 0, y = 0) {
         const snappedX = Math.floor(x / config.cell.width) * config.cell.width + config.cell.width / 2;
-        const snappedY = Math.floor(y / config.cell.height + 1) * config.cell.height;
+        const snappedY = Math.floor(y / config.cell.height) * config.cell.height + config.cell.height / 2;
         return { x: snappedX, y: snappedY };
     }
 
-    _placeDefender() {
+    _placeDefender(event) {
+        const pos = this._getPossibleDefenderLocalPos(event);
+        const cell = this._getCellPos(pos);
+
+        if (this._isDisabledCell(cell) || this._isOccupiedCell(cell)) {
+            return;
+        }
+
+        this._occupiedCells.push(cell);
         this.eventMode = 'passive';
         this.cursor = 'default';
+        this._defenderContainer.activateDefender();
         this.off('pointermove', this._moveDefender, this);
         this.off('pointerdown', this._placeDefender, this);
+    }
+
+    _destroyDefender(defender) {
+        const cell = this._getCellPos(defender.position);
+        const index = this._occupiedCells.findIndex(({x, y}) => cell.x === x && cell.y === y);
+        this._occupiedCells.splice(index, 1)
+    }
+
+    _isDisabledCell(cell) {
+        return this._disabledCells.some(disabledCell => disabledCell.x === cell.x && disabledCell.y === cell.y)
+    }
+
+    _isOccupiedCell(cell) {
+        return this._occupiedCells.some(disabledCell => disabledCell.x === cell.x && disabledCell.y === cell.y)
     }
 
     _removeListeners() {
         super._removeListeners();
         app.off(Events.SPAWN_DEFENDER, this._spawnDefender, this);
+        app.off(Events.DESTROY_DEFENDER, this._destroyDefender, this);
     }
 
     _resize(width = 0, height = 0) {
         super._resize(width, height);
         this._hud.resize(width, height);
         this._cardContainer.resize(width, height);
+    }
+
+    exit() {
+        app.ticker.remove(this._attackEnemies, this);
+        super.exit();
     }
 
     _clear() {
@@ -216,6 +297,7 @@ export default class LevelState extends State {
         this._hud = null;
         this._playerStats = null;
         this._wave = null;
-        this._occupiedCells = [];
+        this._disabledCells = null;
+        this._occupiedCells = null;
     }
 }

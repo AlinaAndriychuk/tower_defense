@@ -62,6 +62,6 @@ export default class DefenderCard extends Container {
 
     _clear() {
         this._removeListeners();
-        this._type = '';
+        this._type = null;
     }
 }

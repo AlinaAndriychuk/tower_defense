@@ -1,3 +1,12 @@
+class Deferred {
+    constructor() {
+        this.resolve = null;
+        this.reject = null;
+
+        this.promise = new Promise((...args) => [this.resolve, this.reject] = args);
+    }
+}
+
 const utils = {
     scaleToCover({
                      target,
@@ -31,7 +40,10 @@ const utils = {
     },
     wait(time) {
         return new Promise(res => gsap.delayedCall(time, res));
-    }
+    },
+    deferred() {
+        return new Deferred();
+    },
 };
 
 export default utils;

@@ -70,6 +70,6 @@ export default class MenuState extends State {
 
     _clear() {
         super._clear();
-        this._buttons = [];
+        this._buttons = null;
     }
 }

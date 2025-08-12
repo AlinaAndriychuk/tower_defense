@@ -43,16 +43,16 @@ const config = {
                 startDuration: 10,
                 path: [
                     { x: 606, y: 80 },
-                    { x: 606, y: 190 },
-                    { x: 355, y: 190 },
-                    { x: 355, y: 446 },
-                    { x: 639, y: 446 },
-                    { x: 639, y: 252, sort: 'backToFront' },
-                    { x: 420, y: 252, sort: 'frontToBack' },
-                    { x: 420, y: 382 },
-                    { x: 574, y: 382 },
-                    { x: 574, y: 349, sort: 'backToFront' },
-                    { x: 735, y: 349 },
+                    { x: 606, y: 175 },
+                    { x: 355, y: 175 },
+                    { x: 355, y: 431 },
+                    { x: 639, y: 431 },
+                    { x: 639, y: 238, sort: 'backToFront' },
+                    { x: 420, y: 238, sort: 'frontToBack' },
+                    { x: 420, y: 366 },
+                    { x: 574, y: 366 },
+                    { x: 574, y: 334, sort: 'backToFront' },
+                    { x: 735, y: 334 },
                 ],
                 cells: {
                     start: {x: 9, y: 3},
@@ -72,19 +72,47 @@ const config = {
         scale: 0.5,
         medusa: {
             animationSpeed: 0.15,
-            speed: 100,
-            health: 150,
-            delay: 0.2,
+            speed: 30,
+            health: 50,
+            delay: 1,
             damage: 1,
+            coins: 10,
+            spriteY: -15,
+            collision: {
+                radiusX: 20,
+                radiusY: 20
+            }
         },
         ariel: {
             animationSpeed: 0.15,
             speed: 1000,
             coins: 25,
             attack: 10,
-            delay: 0.2,
-            damage: 1,
+            attackCooldown: 0.5,
+            damage: 10,
+            spriteY: -15,
+            collision: {
+                radiusX: 50,
+                radiusY: 45
+            }
         },
+    },
+    defender: {
+        collision: {
+            default: 0xffffff,
+            disabled: 0xCB6872
+        }
+    },
+    enemy: {
+        healthBar: {
+            width: 32,
+            height: 1.5,
+            y: 25
+        },
+        coins: {
+            y: -20,
+            duration: 0.5,
+        }
     },
     defenders: ['ariel'],
     hud: {

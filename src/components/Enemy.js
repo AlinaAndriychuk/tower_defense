@@ -1,9 +1,38 @@
 import Character from './Character';
+import AnimationNames from '../constants/AnimationNames';
+import {Container, Graphics, Text} from 'pixi.js';
 import config from '../config';
+import Styles from '../constants/Styles';
+import Events from '../constants/Events';
+import i18n from '../helpers/i18n';
 
 export default class Enemy extends Character {
     _init() {
         super._init();
+        this._createHealthBar();
+
+        this._health = this._characterConfig.health;
+    }
+
+    _createHealthBar() {
+        const container = new Container();
+
+        const border = new Graphics() // todo change on sprite cause of jitter
+            .rect(0, 0, config.enemy.healthBar.width, config.enemy.healthBar.height)
+            .stroke(Styles.ENEMY.HEALTH_BAR.BORDER);
+
+        const emptyBar = new Graphics()
+            .rect(0, 0, config.enemy.healthBar.width, config.enemy.healthBar.height)
+            .fill(Styles.ENEMY.HEALTH_BAR.EMPTY);
+
+        this._healthIndictor = new Graphics()
+            .rect(0, 0, config.enemy.healthBar.width, config.enemy.healthBar.height)
+            .fill(Styles.ENEMY.HEALTH_BAR.FULL);
+
+        container.addChild(border, emptyBar, this._healthIndictor);
+        container.pivot.set(container.width / 2, container.height / 2);
+        container.y = config.enemy.healthBar.y;
+        this.addChild(container);
     }
 
     move(x= 0, y = 0) {
@@ -27,6 +56,36 @@ export default class Enemy extends Character {
     }
 
     _createAnimatedSprite(animationType = '') {
-        super._createAnimatedSprite('move');
+        super._createAnimatedSprite(AnimationNames.MOVE);
+    }
+
+    takeDamage(damage = 0) {
+        if (this._health - damage <= 0) {
+            gsap.killTweensOf(this);
+            app.emit(Events.UPDATE_COINS, this._characterConfig.coins);
+
+            this._showCoins();
+            return;
+        }
+
+        this._health -= damage;
+        this._healthIndictor.scale.x = this._health / this._characterConfig.health;
+    }
+
+    _showCoins() {
+        const text = new Text({
+            text: `+${this._characterConfig.coins} ${i18n.get('COINS')}`,
+            style: Styles.ENEMY.COINS
+        });
+        text.anchor.set(0.5);
+        this.addChild(text);
+
+        gsap.to(text, {
+            y: config.enemy.coins.y,
+            duration: config.enemy.coins.duration,
+            onComplete: () => {
+                this.emit(Events.ENEMY_KILLED, this);
+            }
+        })
     }
 }
