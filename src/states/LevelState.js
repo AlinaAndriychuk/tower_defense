@@ -263,6 +263,7 @@ export default class LevelState extends State {
         this._disable();
         this._occupiedCells.push(cell);
         this._defenderContainer.buyDefender();
+        app.emit(Events.BUY_DEFENDER);
         this.off('pointermove', this._moveDefender, this);
         this.off('pointerdown', this._buyDefender, this);
     }
@@ -282,10 +283,7 @@ export default class LevelState extends State {
     }
 
     _listenToggleDefenderMenu() {
-        if (this._isEnabled) return;
-
         this._enable();
-        this.cursor = 'default';
         this.on('pointerdown', this._toggleDefenderMenu, this);
     }
 
@@ -295,8 +293,15 @@ export default class LevelState extends State {
         this.off('pointerdown', this._toggleDefenderMenu, this);
     }
 
+    _cancelDefenderSpawn() {
+        this._defenderContainer.cancelDefenderSpawn();
+        this.off('pointermove', this._moveDefender, this);
+        this.off('pointerdown', this._buyDefender, this);
+    }
+
     _addListeners() {
         super._addListeners();
+        app.on(Events.CANCEL_DEFENDER_SPAWN, this._cancelDefenderSpawn, this);
         app.on(Events.SPAWN_DEFENDER, this._spawnDefender, this);
         app.on(Events.DESTROY_DEFENDER, this._destroyDefender, this);
         app.on(Events.TOGGLE_DEFENDER_MENU, this._listenToggleDefenderMenu, this);
@@ -304,8 +309,10 @@ export default class LevelState extends State {
 
     _removeListeners() {
         super._removeListeners();
+        app.off(Events.CANCEL_DEFENDER_SPAWN, this._cancelDefenderSpawn, this);
         app.off(Events.SPAWN_DEFENDER, this._spawnDefender, this);
         app.off(Events.DESTROY_DEFENDER, this._destroyDefender, this);
+        app.off(Events.TOGGLE_DEFENDER_MENU, this._listenToggleDefenderMenu, this);
     }
 
     _resize(width = 0, height = 0) {

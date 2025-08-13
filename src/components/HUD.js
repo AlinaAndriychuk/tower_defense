@@ -60,7 +60,7 @@ export default class HUD extends Container {
         this.addChild(graphics);
     }
 
-    _createComponent({title = '', y = 0, property}) {
+    _createComponent({title = '', y = 0, property = ''}) {
         const text = new Text({text: title, style: Styles.DEFAULT.TITLE});
         text.y = y;
         text.x = config.hud.stats.x;

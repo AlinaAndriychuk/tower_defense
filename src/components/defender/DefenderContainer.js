@@ -19,6 +19,7 @@ export default class DefenderContainer extends Container{
         const defender = new Defender(type);
         defender.spawn(x, y);
         this._defenders.push(defender);
+        app.emit(Events.TOGGLE_DEFENDER_MENU, defender);
         return this.addChild(defender);
     }
 
@@ -41,6 +42,13 @@ export default class DefenderContainer extends Container{
         this._setDefenderReady(defender);
         defender.activate();
         defender.buy();
+    }
+
+    cancelDefenderSpawn() {
+        const defender = this._getLastDefender();
+        if (!defender) return;
+
+        this._destroyDefender(defender);
     }
 
     _removeDefenderReady(defender) {

@@ -16,7 +16,7 @@ const config = {
             x: 480,
             y: 320
         },
-        safeWidth: 500,
+        safeWidth: 750,
         safeHeight: 500,
     },
     menu: {
@@ -39,17 +39,18 @@ const config = {
                 coins: 50,
                 startDuration: 10,
                 path: [
-                    { x: 606, y: 80 },
-                    { x: 606, y: 175 },
-                    { x: 355, y: 175 },
-                    { x: 355, y: 431 },
-                    { x: 639, y: 431 },
-                    { x: 639, y: 238, sort: 'backToFront' },
-                    { x: 420, y: 238, sort: 'frontToBack' },
-                    { x: 420, y: 366 },
-                    { x: 574, y: 366 },
-                    { x: 574, y: 334, sort: 'backToFront' },
-                    { x: 735, y: 334 },
+                    { x: 113, y: 368 },
+                    { x: 335, y: 368 },
+                    { x: 335, y: 205 },
+                    { x: 593, y: 205 },
+                    { x: 593, y: 301 },
+                    { x: 432, y: 301, sort: 'backToFront' },
+                    { x: 432, y: 432, sort: 'frontToBack' },
+                    { x: 687, y: 432 },
+                    { x: 687, y: 268 },
+                    { x: 752, y: 268 },
+                    { x: 752, y: 334, sort: 'backToFront' },
+                    { x: 832, y: 334 },
                 ],
                 cells: {
                     start: {x: 9, y: 3},
@@ -75,7 +76,7 @@ const config = {
     characters: {
         medusa: {
             animationSpeed: 0.15,
-            speed: 30,
+            speed: 50,
             health: 50,
             delay: 1,
             damage: 1,
@@ -169,6 +170,9 @@ const config = {
         color: 0x000000,
         sellButton: {
             y: 87
+        },
+        cancelButton: {
+            y: 105
         },
         refund: {
             x: 5,

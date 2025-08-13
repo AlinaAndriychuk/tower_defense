@@ -112,7 +112,7 @@ export default class Character extends Container {
         }).then();
     }
 
-    _hideAllElements() {
+    _hideAllComponents() {
         this.children.forEach(child => child.visible = false);
     }
 

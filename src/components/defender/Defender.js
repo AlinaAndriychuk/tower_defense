@@ -66,7 +66,7 @@ export default class Defender extends Character {
     }
 
     sell() {
-        this._hideAllElements();
+        this._hideAllComponents();
         return this._showCoins(this._characterConfig.refund).then(() => {
             app.emit(Events.UPDATE_COINS, this._characterConfig.refund);
         });

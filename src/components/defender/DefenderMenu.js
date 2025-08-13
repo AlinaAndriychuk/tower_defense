@@ -7,10 +7,34 @@ import ButtonsConfig from '../../constants/ButtonsConfig';
 import utils from '../../helpers/utils';
 import Events from '../../constants/Events';
 
+const defenderMenuButtonsConfig = [
+    {
+        text: i18n.get('SELL'),
+        y: config.defenderMenu.sellButton.y,
+        property: '_sellButton',
+    },
+    {
+        text: i18n.get('CANCEL'),
+        y: config.defenderMenu.cancelButton.y,
+        property: '_cancelButton',
+    },
+];
+
+const defenderMenuTextConfig = [
+    {
+        text: `${i18n.get('REFUND')}:`,
+        x: config.defenderMenu.refund.x,
+        y: config.defenderMenu.refund.y,
+        property: '_refundText',
+    },
+];
+
 export default class DefenderMenu extends Container {
     constructor(){
         super();
         this._defender = null;
+        this._sellButton = null;
+        this._cancelButton = null;
         this._refundText = null;
 
         this.interactive = true;
@@ -25,9 +49,8 @@ export default class DefenderMenu extends Container {
 
     _createComponents() {
         this._createBackground();
-        this._createCancelButton();
-        this._createSellButton();
-        this._createRefundText();
+        defenderMenuButtonsConfig.forEach(componentData => this._createButton(componentData));
+        defenderMenuTextConfig.forEach(componentData => this._createText(componentData));
     }
 
     _createBackground() {
@@ -39,52 +62,33 @@ export default class DefenderMenu extends Container {
         this.addChild(graphics);
     }
 
-    _createSellButton() { // todo create circle
-        const button = new Button({
+    _createButton({text = '', y = 0, property = ''}) {
+        this[property] = new Button({
             ...ButtonsConfig.DEFAULT,
-            text: i18n.get('SELL'),
+            text,
             style: Styles.DEFAULT.BUTTON
         });
-        button.x = this.width / 2;
-        button.y = config.defenderMenu.sellButton.y;
-        this.addChild(button);
-
-        button.on('pointerdown', this._sellDefender, this)
+        this[property].x = this.width / 2;
+        this[property].y = y;
+        this.addChild(this[property]);
     }
 
-    _createRefundText() {
-        const text = new Text({text: `${i18n.get('REFUND')}:`, style: Styles.DEFAULT.TITLE});
-        text.x = config.defenderMenu.refund.x;
-        text.y = config.defenderMenu.refund.y;
+    _createText({text = '', x = 0, y = 0, property = ''}) {
+        const title = new Text({text, style: Styles.DEFAULT.TITLE});
+        title.x = x;
+        title.y = y;
 
-        this._refundText = new Text({text: '', style: Styles.DEFAULT.VALUE});
-        this._refundText.anchor.x = 1;
-        this._refundText.x = this.width - config.defenderMenu.refund.x;
-        this._refundText.y = config.defenderMenu.refund.y;
-        this.addChild(text, this._refundText);
+        this[property] = new Text({text: '', style: Styles.DEFAULT.VALUE});
+        this[property].anchor.x = 1;
+        this[property].x = this.width - x;
+        this[property].y = y;
+        this.addChild(title, this[property]);
     }
 
     _sellDefender() {
         if (!this._defender) return;
 
         app.emit(Events.SELL_DEFENDER, this._defender);
-    }
-
-    _isPressedButton(event) {
-        return this.children.some(child => child.isEnabled && child === event.target);
-    }
-
-    _addListeners() {
-        app.on(Events.TOGGLE_DEFENDER_MENU, this._toggle, this);
-        this.on('pointerdown', event => {
-            if (this._isPressedButton(event)) return;
-            event.stopPropagation();
-        }, this);
-    }
-
-    _removeListeners() {
-        this.removeAllListeners();
-        app.off(Events.TOGGLE_DEFENDER_MENU, this._toggle, this);
     }
 
     _toggle(defender) {
@@ -99,6 +103,55 @@ export default class DefenderMenu extends Container {
         this._refundText.text = config.characters[this._defender.type].refund;
     }
 
+    _showCancelButton() {
+        this._hideAllComponents();
+        this._cancelButton.visible = true;
+    }
+
+    _hideCancelButton() {
+        this._showAllComponents();
+        this._cancelButton.visible = false;
+    }
+
+    _cancelDefenderSpawn() {
+        app.emit(Events.CANCEL_DEFENDER_SPAWN);
+        this._hideCancelButton();
+    }
+
+    _showAllComponents() {
+        this.children.forEach(child => child.visible = true);
+    }
+
+    _hideAllComponents() {
+        this.children.forEach(child => {
+            if (child instanceof Graphics) return;
+            child.visible = false;
+        });
+    }
+
+    _addListeners() {
+        this._sellButton.on('pointerdown', this._sellDefender, this);
+        this._cancelButton.on('pointerdown', this._cancelDefenderSpawn, this);
+        app.on(Events.SPAWN_DEFENDER, this._showCancelButton, this);
+        app.on(Events.BUY_DEFENDER, this._hideCancelButton, this);
+        app.on(Events.TOGGLE_DEFENDER_MENU, this._toggle, this);
+        this.on('pointerdown', event => {
+            if (this._isPressedButton(event)) return;
+            event.stopPropagation();
+        }, this);
+    }
+
+    _removeListeners() {
+        this.removeAllListeners();
+        this.children.forEach(child => child.removeAllListeners());
+        app.off(Events.SPAWN_DEFENDER, this._showCancelButton, this);
+        app.off(Events.TOGGLE_DEFENDER_MENU, this._toggle, this);
+    }
+
+    _isPressedButton(event) {
+        return this.children.some(child => child.isEnabled && child === event.target);
+    }
+
     resize(width = 0, height = 0) {
         utils.positionTopRight(this, width, height);
         this.y += config.defenderMenu.y;
@@ -111,6 +164,9 @@ export default class DefenderMenu extends Container {
 
     _clear() {
         this._removeListeners();
+        this._sellButton = null;
+        this._cancelButton = null;
+        this._refundText = null;
         this._defender = null;
     }
 }

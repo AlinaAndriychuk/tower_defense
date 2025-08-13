@@ -8,4 +8,5 @@ export default {
     COST: 'Cost',
     SELL: 'Sell',
     REFUND: 'Refund',
+    CANCEL: 'Cancel',
 };
