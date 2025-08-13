@@ -1,7 +1,8 @@
 import {Container, Graphics} from 'pixi.js';
-import config from '../config';
+import config from '../../config';
 import DefenderCard from './DefenderCard';
-import Events from '../constants/Events';
+import Events from '../../constants/Events';
+import utils from '../../helpers/utils';
 
 export default class DefenderCardContainer extends Container {
     constructor(){
@@ -24,9 +25,9 @@ export default class DefenderCardContainer extends Container {
     _createBackground() {
         const graphics = new Graphics();
         graphics
-            .rect(0, 0, config.card_container.width, config.card_container.height)
-            .fill({ color: config.card_container.color });
-        graphics.alpha = config.card_container.alpha;
+            .rect(0, 0, config.cardContainer.width, config.cardContainer.height)
+            .fill({ color: config.cardContainer.color });
+        graphics.alpha = config.cardContainer.alpha;
         this.addChild(graphics);
     }
 
@@ -38,21 +39,27 @@ export default class DefenderCardContainer extends Container {
         });
     }
 
-    _addListeners() {
-        app.on(Events.COINS_UPDATED, this._updateCardsState, this);
+    _updateCardsState(coins = 0) {
+        this._cards.forEach(card => card.updateState(coins));
     }
 
-    _updateCardsState(coins = 0) {
-        this._cards.forEach(card => card.updateState(coins))
+    _toggle() {
+        this.visible = !this.visible;
+    }
+
+    _addListeners() {
+        app.on(Events.COINS_UPDATED, this._updateCardsState, this);
+        app.on(Events.TOGGLE_DEFENDER_MENU, this._toggle, this);
     }
 
     _removeListeners() {
         app.off(Events.COINS_UPDATED, this._updateCardsState, this);
+        app.off(Events.TOGGLE_DEFENDER_MENU, this._toggle, this);
     }
 
     resize(width = 0, height = 0) {
-        this.x = Math.max((this.parent.width - width) / 2 / this.parent.scale.x, 0);
-        this.y = Math.max((this.parent.height - height) / 2 / this.parent.scale.y, 0) + config.card_container.y;
+        utils.positionTopRight(this, width, height);
+        this.y += config.cardContainer.y;
     }
 
     destroy() {

@@ -23,10 +23,7 @@ const config = {
         title: {
             y: 200
         },
-        startButton: {
-            width: 200,
-            height: 70,
-            color: 0xa0a0a0,
+        button: {
             y: 350
         }
     },
@@ -67,9 +64,15 @@ const config = {
             }
         ]
     },
-    characters: {
+    character: {
         speedCoefficient: 100,
         scale: 0.5,
+        coins: {
+            y: -25,
+            duration: 0.5,
+        },
+    },
+    characters: {
         medusa: {
             animationSpeed: 0.15,
             speed: 30,
@@ -86,7 +89,8 @@ const config = {
         ariel: {
             animationSpeed: 0.15,
             speed: 1000,
-            coins: 25,
+            buy: 25,
+            refund: 15,
             attack: 10,
             attackCooldown: 0.5,
             damage: 10,
@@ -109,10 +113,6 @@ const config = {
             height: 1.5,
             y: 25
         },
-        coins: {
-            y: -20,
-            duration: 0.5,
-        }
     },
     defenders: ['ariel'],
     hud: {
@@ -136,17 +136,19 @@ const config = {
             }
         }
     },
-    card_container: {
-        width: 89.6,
+    cardContainer: {
+        width: 90,
         height: 128,
-        y: 85,
+        y: 80,
         color: 0x000000,
         alpha: 0.3,
     },
     card: {
+        width: 90,
+        height: 128,
         text: {
             x: 5,
-            y: 100
+            y: 108
         },
         character: {
             scale: 0.7
@@ -159,6 +161,20 @@ const config = {
         width: 32,
         height: 32,
     },
+    defenderMenu: {
+        width: 90,
+        height: 128,
+        y: 80,
+        alpha: 0.3,
+        color: 0x000000,
+        sellButton: {
+            y: 87
+        },
+        refund: {
+            x: 5,
+            y: 108
+        }
+    }
 };
 
 export default config;

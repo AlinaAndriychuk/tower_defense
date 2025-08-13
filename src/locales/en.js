@@ -6,4 +6,6 @@ export default {
     WAVE: 'Wave',
     NEXT_WAVE: 'Next Wave',
     COST: 'Cost',
+    SELL: 'Sell',
+    REFUND: 'Refund',
 };

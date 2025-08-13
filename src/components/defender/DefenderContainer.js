@@ -1,6 +1,6 @@
 import {Container} from 'pixi.js';
 import Defender from './Defender';
-import Events from '../constants/Events';
+import Events from '../../constants/Events';
 
 export default class DefenderContainer extends Container{
     constructor() {
@@ -13,10 +13,6 @@ export default class DefenderContainer extends Container{
 
     _init() {
         this._addListeners();
-    }
-
-    _addListeners() {
-
     }
 
     spawnDefender(type = '', x = 0, y = 0) {
@@ -42,22 +38,27 @@ export default class DefenderContainer extends Container{
         const defender = this._getLastDefender();
         if (!defender) return;
 
-        this._readyDefenders.push(defender);
+        this._setDefenderReady(defender);
         defender.activate();
         defender.buy();
-        defender.on(Events.DEFENDER_COOLDOWN_START, this._removeDefenderReady, this);
-        defender.on(Events.DEFENDER_COOLDOWN_COMPLETE, this._setDefenderReady, this);
     }
 
     _removeDefenderReady(defender) {
-        this._readyDefenders.splice(this._readyDefenders.indexOf(defender), 1);
+        if (!this._readyDefenders.includes(defender)) return;
+        const index = this._readyDefenders.indexOf(defender);
+        this._readyDefenders.splice(index, 1);
     }
 
     _setDefenderReady(defender) {
         this._readyDefenders.push(defender);
     }
 
+    _sellDefender(defender) {
+        defender.sell().then(() => this._destroyDefender(defender));
+    }
+
     _destroyDefender(defender) {
+        this._removeDefenderReady(defender);
         this._defenders.splice(this._defenders.indexOf(defender), 1);
         app.emit(Events.DESTROY_DEFENDER, defender);
         defender.destroy();
@@ -68,7 +69,6 @@ export default class DefenderContainer extends Container{
 
         this._defenders.forEach(defender => this._destroyDefender(defender));
         this._clear();
-        this._removeListeners();
         this.removeFromParent();
         super.destroy({children: true});
     }
@@ -77,16 +77,25 @@ export default class DefenderContainer extends Container{
         return this._defenders[this._defenders.length - 1];
     }
 
-    _removeListeners() {
+    _addListeners() {
+        app.on(Events.DEFENDER_COOLDOWN_START, this._removeDefenderReady, this);
+        app.on(Events.DEFENDER_COOLDOWN_COMPLETE, this._setDefenderReady, this);
+        app.on(Events.SELL_DEFENDER, this._sellDefender, this);
+    }
 
+    _removeListeners() {
+        app.off(Events.DEFENDER_COOLDOWN_START, this._removeDefenderReady, this);
+        app.off(Events.DEFENDER_COOLDOWN_COMPLETE, this._setDefenderReady, this);
+        app.off(Events.SELL_DEFENDER, this._sellDefender, this);
+    }
+
+    _clear() {
+        this._removeListeners();
+        this._defenders = null;
+        this._readyDefenders = null;
     }
 
     get readyDefenders() {
         return this._readyDefenders;
-    }
-
-    _clear() {
-        this._defenders = null;
-        this._readyDefenders = null;
     }
 }

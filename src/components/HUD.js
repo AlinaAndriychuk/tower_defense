@@ -3,6 +3,30 @@ import config from '../config';
 import Styles from '../constants/Styles';
 import i18n from '../helpers/i18n';
 import Events from '../constants/Events';
+import utils from '../helpers/utils';
+
+const HUDConfig = [
+    {
+        title: `${i18n.get('COINS')}:`,
+        y: config.hud.stats.coins.y,
+        property: '_coinsText',
+    },
+    {
+        title: `${i18n.get('LIVES')}:`,
+        y: config.hud.stats.lives.y,
+        property: '_livesText',
+    },
+    {
+        title: `${i18n.get('WAVE')}:`,
+        y: config.hud.stats.waveNumber.y,
+        property: '_waveNumberText',
+    },
+    {
+        title: `${i18n.get('NEXT_WAVE')}:`,
+        y: config.hud.stats.waveTimer.y,
+        property: '_waveTimerText',
+    }
+];
 
 export default class HUD extends Container {
     constructor() {
@@ -24,10 +48,7 @@ export default class HUD extends Container {
 
     _createComponents() {
         this._createBackground();
-        this._createCoinsText();
-        this._createLivesText();
-        this._createWaveNumberText();
-        this._createWaveTimerText();
+        HUDConfig.forEach(componentData => this._createComponent(componentData));
     }
 
     _createBackground() {
@@ -39,52 +60,16 @@ export default class HUD extends Container {
         this.addChild(graphics);
     }
 
-    _createCoinsText() {
-        const text = new Text({text: i18n.get('COINS'), style: Styles.DEFAULT.TITLE});
-        text.y = config.hud.stats.coins.y;
+    _createComponent({title = '', y = 0, property}) {
+        const text = new Text({text: title, style: Styles.DEFAULT.TITLE});
+        text.y = y;
         text.x = config.hud.stats.x;
 
-        this._coinsText = new Text({text: '0', style: Styles.DEFAULT.VALUE});
-        this._coinsText.anchor.x = 1;
-        this._coinsText.x = this.width - config.hud.stats.x;
-        this._coinsText.y = config.hud.stats.coins.y;
-        this.addChild(text, this._coinsText);
-    }
-
-    _createLivesText() {
-        const text = new Text({text: i18n.get('LIVES'), style: Styles.DEFAULT.TITLE});
-        text.y = config.hud.stats.lives.y;
-        text.x = config.hud.stats.x;
-
-        this._livesText = new Text({text: '0', style: Styles.DEFAULT.VALUE});
-        this._livesText.anchor.x = 1;
-        this._livesText.x = this.width - config.hud.stats.x;
-        this._livesText.y = config.hud.stats.lives.y;
-        this.addChild(text, this._livesText);
-    }
-
-    _createWaveNumberText() {
-        const text = new Text({text: i18n.get('WAVE'), style: Styles.DEFAULT.TITLE});
-        text.y = config.hud.stats.waveNumber.y;
-        text.x = config.hud.stats.x;
-
-        this._waveNumberText = new Text({text: '0', style: Styles.DEFAULT.VALUE});
-        this._waveNumberText.anchor.x = 1;
-        this._waveNumberText.x = this.width - config.hud.stats.x;
-        this._waveNumberText.y = config.hud.stats.waveNumber.y;
-        this.addChild(text, this._waveNumberText);
-    }
-
-    _createWaveTimerText() {
-        const text = new Text({text: i18n.get('NEXT_WAVE'), style: Styles.DEFAULT.TITLE});
-        text.y = config.hud.stats.waveTimer.y;
-        text.x = config.hud.stats.x;
-
-        this._waveTimerText = new Text({text: this._formatTime(this._waveTimer), style: Styles.DEFAULT.VALUE});
-        this._waveTimerText.anchor.x = 1;
-        this._waveTimerText.x = this.width - config.hud.stats.x;
-        this._waveTimerText.y = config.hud.stats.waveTimer.y;
-        this.addChild(text, this._waveTimerText);
+        this[property] = new Text({text: '', style: Styles.DEFAULT.VALUE});
+        this[property].anchor.x = 1;
+        this[property].x = this.width - config.hud.stats.x;
+        this[property].y = y;
+        this.addChild(text, this[property]);
     }
 
     _updateWaveTimer({deltaMS}) {
@@ -128,8 +113,7 @@ export default class HUD extends Container {
     }
 
     resize(width = 0, height = 0) {
-        this.x = Math.max((this.parent.width - width) / 2 / this.parent.scale.x, 0);
-        this.y = Math.max((this.parent.height - height) / 2 / this.parent.scale.y, 0);
+        utils.positionTopRight(this, width, height);
     }
 
     destroy(options = {}) {

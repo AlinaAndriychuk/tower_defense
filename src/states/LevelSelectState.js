@@ -42,11 +42,6 @@ export default class LevelSelectState extends State {
         });
     }
 
-    _removeListeners() {
-        super._removeListeners();
-        this._cards.forEach(card => card.removeAllListeners());
-    }
-
     _clear() {
         super._clear();
         this._cards = null;

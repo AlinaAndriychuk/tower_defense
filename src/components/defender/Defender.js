@@ -1,9 +1,9 @@
-import Character from './Character';
+import Character from '../Character';
 import {FillGradient, Graphics} from 'pixi.js';
-import config from '../config';
-import Events from '../constants/Events';
-import utils from '../helpers/utils';
-import AnimationNames from '../constants/AnimationNames';
+import config from '../../config';
+import Events from '../../constants/Events';
+import utils from '../../helpers/utils';
+import AnimationNames from '../../constants/AnimationNames';
 
 export default class Defender extends Character {
     _init() {
@@ -47,10 +47,29 @@ export default class Defender extends Character {
 
     activate() {
         this._collision.alpha = 0.2; // todo set to 0
+        this._enable();
+        this._animatedSprite.on('pointerdown', this._toggleDefenderMenu, this);
+    }
+
+    _toggleDefenderMenu(event) {
+        event.stopPropagation();
+        app.emit(Events.TOGGLE_DEFENDER_MENU, this);
+    }
+
+    _enable() {
+        this._animatedSprite.eventMode = 'static';
+        this._animatedSprite.cursor = 'pointer';
     }
 
     buy() {
-        app.emit(Events.UPDATE_COINS, -this._characterConfig.coins);
+        app.emit(Events.UPDATE_COINS, -this._characterConfig.buy);
+    }
+
+    sell() {
+        this._hideAllElements();
+        return this._showCoins(this._characterConfig.refund).then(() => {
+            app.emit(Events.UPDATE_COINS, this._characterConfig.refund);
+        });
     }
 
     async attack(enemies = []) {
@@ -70,9 +89,10 @@ export default class Defender extends Character {
     }
 
     _startCooldown() {
-        this.emit(Events.DEFENDER_COOLDOWN_START, this);
+        app.emit(Events.DEFENDER_COOLDOWN_START, this);
         utils.wait(this._characterConfig.attackCooldown).then(() => {
-            this.emit(Events.DEFENDER_COOLDOWN_COMPLETE, this);
+            if (this.destroyed) return;
+            app.emit(Events.DEFENDER_COOLDOWN_COMPLETE, this);
         });
     }
 

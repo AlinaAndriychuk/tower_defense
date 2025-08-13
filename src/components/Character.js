@@ -1,7 +1,9 @@
-import {AnimatedSprite, Assets, Container, Graphics} from 'pixi.js';
+import {AnimatedSprite, Assets, Container, Graphics, Text} from 'pixi.js';
 import config from '../config';
 import AnimationNames from '../constants/AnimationNames';
 import utils from '../helpers/utils';
+import i18n from '../helpers/i18n';
+import Styles from '../constants/Styles';
 
 export default class Character extends Container {
     constructor(type = '') {
@@ -27,7 +29,7 @@ export default class Character extends Container {
         this._animatedSprite = new AnimatedSprite(this._animationName);
         this._animatedSprite.animationSpeed = this._characterConfig.animationSpeed;
         this._animatedSprite.pivot.set(this._animatedSprite.width / 2, this._animatedSprite.height / 2);
-        this._animatedSprite.scale.set(config.characters.scale);
+        this._animatedSprite.scale.set(config.character.scale);
         this._animatedSprite.y = this._characterConfig.spriteY;
         this.addChild(this._animatedSprite);
     }
@@ -64,7 +66,7 @@ export default class Character extends Container {
 
         this._destination.x = x;
         this._destination.y = y;
-        const duration = config.characters.speedCoefficient / this._characterConfig.speed;
+        const duration = config.character.speedCoefficient / this._characterConfig.speed;
 
         gsap.killTweensOf(this);
         return gsap.to(this, {
@@ -96,17 +98,35 @@ export default class Character extends Container {
         return deferred.promise;
     }
 
+    _showCoins(coins = 0) {
+        const text = new Text({
+            text: `+${coins} ${i18n.get('COINS')}`,
+            style: Styles.CHARACTER.COINS
+        });
+        text.anchor.set(0.5);
+        this.addChild(text);
+
+        return gsap.to(text, {
+            y: config.character.coins.y,
+            duration: config.character.coins.duration,
+        }).then();
+    }
+
+    _hideAllElements() {
+        this.children.forEach(child => child.visible = false);
+    }
+
     destroy(options= {}) {
         if (this.destroyed) return;
 
         this._clear();
         gsap.killTweensOf(this);
-        this.removeAllListeners();
         this.removeFromParent();
         super.destroy({children: true});
     }
 
     _clear() {
+        this._removeListeners();
         this._type = null;
         this._animatedSprite = null;
         this._characterConfig = null;
@@ -115,11 +135,20 @@ export default class Character extends Container {
         this._animationName = null;
     }
 
+    _removeListeners() {
+        this.removeAllListeners();
+        this.children.forEach(child => child.removeAllListeners());
+    }
+
     get radiusX() {
         return this._collision.width / 2;
     }
 
     get radiusY() {
         return this._collision.height / 2;
+    }
+
+    get type() {
+        return this._type;
     }
 }

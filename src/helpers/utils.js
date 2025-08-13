@@ -1,3 +1,5 @@
+import config from '../config';
+
 class Deferred {
     constructor() {
         this.resolve = null;
@@ -10,8 +12,8 @@ class Deferred {
 const utils = {
     scaleToCover({
                      target,
-                     width,
-                     height,
+                     width = 0,
+                     height = 0,
                      safeWidth = 0,
                      safeHeight = 0,
                      originWidth = 0,
@@ -26,19 +28,24 @@ const utils = {
 
         target.scale.set(Math.min(safeScale, baseScale));
     },
-    scaleToFit(target, width, height) {
+    scaleToFit(target, width = 0, height = 0) {
         const bounds = target.getLocalBounds();
         const scaleX = width / bounds.width;
         const scaleY = height / bounds.height;
         const scale = Math.min(scaleX, scaleY);
         target.scale.set(scale);
     },
-    centralize(target, width, height) {
+    centralize(target, width = 0, height = 0) {
         const bounds = target.getLocalBounds();
         target.pivot.set(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
         target.position.set(width / 2, height / 2);
     },
-    wait(time) {
+    positionTopRight(target, width = 0, height = 0) {
+        const xOffset = 1; // fix 1px between side and target
+        target.x = Math.max((target.parent.width - width) / 2 / target.parent.scale.x - xOffset, 0);
+        target.y = Math.max((target.parent.height - height) / 2 / target.parent.scale.y, 0);
+    },
+    wait(time = 0) {
         return new Promise(res => gsap.delayedCall(time, res));
     },
     deferred() {

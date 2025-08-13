@@ -6,6 +6,12 @@ export default class EnemyContainer extends Container{
     constructor() {
         super();
         this._enemies = [];
+
+        this._init();
+    }
+
+    _init() {
+        this._addListeners();
     }
 
     spawnEnemy(type = '', path = []) {
@@ -13,7 +19,6 @@ export default class EnemyContainer extends Container{
         enemy.spawn(path[0].x, path[0].y);
         this._moveEnemy(enemy, path);
         this._enemies.push(enemy);
-        enemy.on(Events.ENEMY_KILLED, this._destroyEnemy, this);
         this.addChildAt(enemy, 0);
     }
 
@@ -52,11 +57,25 @@ export default class EnemyContainer extends Container{
         if (this.destroyed) return;
 
         this._enemies.forEach(enemy => this._destroyEnemy(enemy));
+        this._clear();
         this.removeFromParent();
         super.destroy({children: true});
     }
 
     get enemies() {
         return this._enemies;
+    }
+
+    _addListeners() {
+        app.on(Events.ENEMY_KILLED, this._destroyEnemy, this);
+    }
+
+    _removeListeners() {
+        app.off(Events.ENEMY_KILLED, this._destroyEnemy, this);
+    }
+
+    _clear() {
+        this._removeListeners();
+        this._enemies = null;
     }
 }

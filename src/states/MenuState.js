@@ -5,6 +5,8 @@ import i18n from '../helpers/i18n';
 import config from '../config';
 import Events from '../constants/Events';
 import States from '../constants/States';
+import Button from '../components/Button';
+import ButtonsConfig from '../constants/ButtonsConfig';
 
 export default class MenuState extends State {
     constructor(name = '') {
@@ -36,36 +38,19 @@ export default class MenuState extends State {
     }
 
     _createStartButton() {
-        const startButton = new Container();
-        const graphics = new Graphics()
-            .rect(0, 0, config.menu.startButton.width, config.menu.startButton.height)
-            .fill({ color: config.menu.startButton.color });
-        startButton.addChild(graphics);
-        startButton.pivot.set(startButton.width / 2, startButton.height / 2);
-        startButton.x = this.width / 2;
-        startButton.y = config.menu.startButton.y;
-        startButton.eventMode = 'static';
-        startButton.cursor = 'pointer';
-        this.addChild(startButton);
-
-        const text = new Text({
+        const button = new Button({
+            ...ButtonsConfig.MENU,
             text: i18n.get('START_BUTTON'),
             style: Styles.MENU.BUTTON
         });
-        text.anchor.set(0.5);
-        text.x = startButton.width / 2;
-        text.y =  startButton.height / 2;
-        startButton.addChild(text);
-        this._buttons.push(startButton);
+        button.x = this.width / 2;
+        button.y = config.menu.button.y;
+        this.addChild(button);
+        this._buttons.push(button);
 
-        startButton.once('pointerdown', () => {
+        button.once('pointerdown', () => {
             app.emit(Events.CHANGE_STATE, {name: States.LEVEL_SELECT});
         });
-    }
-
-    _removeListeners() {
-        super._removeListeners();
-        this._buttons.forEach(button => button.removeAllListeners());
     }
 
     _clear() {

@@ -1,8 +1,8 @@
-import config from '../config';
-import {Assets, Container, Sprite, Text} from 'pixi.js';
-import i18n from '../helpers/i18n';
-import Styles from '../constants/Styles';
-import Events from '../constants/Events';
+import config from '../../config';
+import {Assets, Container, Sprite, Text, Texture} from 'pixi.js';
+import i18n from '../../helpers/i18n';
+import Styles from '../../constants/Styles';
+import Events from '../../constants/Events';
 
 export default class DefenderCard extends Container {
     constructor(type = '') {
@@ -10,7 +10,7 @@ export default class DefenderCard extends Container {
         this._type = type;
         this._characterConfig = config.characters[this._type];
         this._sprite = null;
-        this._isDisabled = true;
+        this._isEnabled = false;
 
         this._init();
     }
@@ -22,8 +22,16 @@ export default class DefenderCard extends Container {
     }
 
     _createComponents() {
+        this._createBackground();
         this._createCharacter();
         this._createText();
+    }
+
+    _createBackground() {
+        const sprite = new Sprite(Texture.EMPTY);
+        sprite.width = config.card.width;
+        sprite.height = config.card.height;
+        this.addChild(sprite);
     }
 
     _createCharacter() {
@@ -40,7 +48,7 @@ export default class DefenderCard extends Container {
         title.y = config.card.text.y;
         title.x = config.card.text.x;
 
-        const value = new Text({text: this._characterConfig.coins, style: Styles.DEFAULT.VALUE});
+        const value = new Text({text: this._characterConfig.buy, style: Styles.DEFAULT.VALUE});
         value.anchor.x = 1;
         value.x = this.width - config.card.text.x;
         value.y = config.card.text.y;
@@ -48,10 +56,11 @@ export default class DefenderCard extends Container {
     }
 
     _addListeners() {
-        this.on('pointerdown', this._buyDefender, this);
+        this.on('pointerdown', this._spawnDefender, this);
     }
 
-    _buyDefender(event) {
+    _spawnDefender(event) {
+        event.stopPropagation();
         app.emit(Events.SPAWN_DEFENDER, {type: this._type, event});
     }
 
@@ -64,18 +73,18 @@ export default class DefenderCard extends Container {
     }
 
     _disable() {
-        if (this._isDisabled) return;
+        if (!this._isEnabled) return;
 
-        this._isDisabled = true;
+        this._isEnabled = false;
         this.eventMode = 'passive';
         this.cursor = 'default';
         this._sprite.alpha = config.card.disabled.alpha;
     }
 
     _enable() {
-        if (!this._isDisabled) return;
+        if (this._isEnabled) return;
 
-        this._isDisabled = false;
+        this._isEnabled = true;
         this.eventMode = 'static';
         this.cursor = 'pointer';
         this._sprite.alpha = 1;
@@ -94,6 +103,6 @@ export default class DefenderCard extends Container {
         this._removeListeners();
         this._type = null;
         this._sprite = null;
-        this._isDisabled = null;
+        this._isEnabled = null;
     }
 }

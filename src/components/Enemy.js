@@ -80,31 +80,12 @@ export default class Enemy extends Character {
         gsap.killTweensOf(this);
         app.emit(Events.UPDATE_COINS, this._characterConfig.coins);
         this._hideAllElements();
-        this._showCoins();
-    }
-
-    _hideAllElements() {
-        this.children.forEach(child => child.visible = false);
+        this._showCoins(this._characterConfig.coins).then(() => {
+            app.emit(Events.ENEMY_KILLED, this);
+        });
     }
 
     _isKilled() {
         return this._health === 0;
-    }
-
-    _showCoins() {
-        const text = new Text({
-            text: `+${this._characterConfig.coins} ${i18n.get('COINS')}`,
-            style: Styles.ENEMY.COINS
-        });
-        text.anchor.set(0.5);
-        this.addChild(text);
-
-        gsap.to(text, {
-            y: config.enemy.coins.y,
-            duration: config.enemy.coins.duration,
-            onComplete: () => {
-                this.emit(Events.ENEMY_KILLED, this);
-            }
-        })
     }
 }

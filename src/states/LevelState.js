@@ -5,11 +5,11 @@ import HUD from '../components/HUD';
 import WaveController from '../controllers/WaveController';
 import Events from '../constants/Events';
 import PlayerStats from '../core/PlayerStats';
-import DefenderCardContainer from '../components/DefenderCardContainer';
-import DefenderContainer from '../components/DefenderContainer';
+import DefenderCardContainer from '../components/defender/DefenderCardContainer';
+import DefenderContainer from '../components/defender/DefenderContainer';
 import config from '../config';
 import Styles from '../constants/Styles';
-import utils from '../helpers/utils';
+import DefenderMenu from '../components/defender/DefenderMenu';
 
 export default class LevelState extends State {
     constructor(name = '') {
@@ -23,6 +23,8 @@ export default class LevelState extends State {
         this._playerStats = null;
         this._wave = null;
         this._cardContainer = null;
+        this._defenderMenu = null;
+        this._isEnabled = false;
         this._disabledCells = [];
         this._occupiedCells = [];
     }
@@ -43,6 +45,7 @@ export default class LevelState extends State {
         this._createDefenderContainer();
         this._createHUD();
         this._createCardContainer();
+        this._createDefenderMenu();
     }
 
     _createBackground() {
@@ -89,6 +92,10 @@ export default class LevelState extends State {
 
     _createCardContainer() {
         this._cardContainer = this.addChild(new DefenderCardContainer());
+    }
+
+    _createDefenderMenu() {
+        this._defenderMenu = this.addChild(new DefenderMenu());
     }
 
     _attackEnemies() {
@@ -169,23 +176,29 @@ export default class LevelState extends State {
         return num;
     }
 
-    _addListeners() {
-        super._addListeners();
-        app.on(Events.SPAWN_DEFENDER, this._spawnDefender, this);
-        app.on(Events.DESTROY_DEFENDER, this._destroyDefender, this);
-    }
-
     async _spawnDefender({type = '', event}) {
-        this.eventMode = 'static';
-        this.cursor = 'pointer';
-
+        this._enable();
         this.on('pointermove', this._moveDefender, this);
-        this.once('pointerup', () => {
-            this.on('pointerdown', this._buyDefender, this);
-        }, this);
+        this.on('pointerdown', this._buyDefender, this);
 
         const {x, y} =  this._getPossibleDefenderLocalPos(event);
         this._defenderContainer.spawnDefender(type, x, y);
+    }
+
+    _enable() {
+        if (this._isEnabled) return;
+
+        this._isEnabled = true;
+        this.eventMode = 'static';
+        this.cursor = 'pointer';
+    }
+
+    _disable() {
+        if (!this._isEnabled) return;
+
+        this._isEnabled = false;
+        this.eventMode = 'passive';
+        this.cursor = 'default';
     }
 
     _moveDefender(event) {
@@ -247,9 +260,8 @@ export default class LevelState extends State {
             return;
         }
 
+        this._disable();
         this._occupiedCells.push(cell);
-        this.eventMode = 'passive';
-        this.cursor = 'default';
         this._defenderContainer.buyDefender();
         this.off('pointermove', this._moveDefender, this);
         this.off('pointerdown', this._buyDefender, this);
@@ -269,6 +281,27 @@ export default class LevelState extends State {
         return this._occupiedCells.some(disabledCell => disabledCell.x === cell.x && disabledCell.y === cell.y)
     }
 
+    _listenToggleDefenderMenu() {
+        if (this._isEnabled) return;
+
+        this._enable();
+        this.cursor = 'default';
+        this.on('pointerdown', this._toggleDefenderMenu, this);
+    }
+
+    _toggleDefenderMenu() {
+        app.emit(Events.TOGGLE_DEFENDER_MENU);
+        this._disable();
+        this.off('pointerdown', this._toggleDefenderMenu, this);
+    }
+
+    _addListeners() {
+        super._addListeners();
+        app.on(Events.SPAWN_DEFENDER, this._spawnDefender, this);
+        app.on(Events.DESTROY_DEFENDER, this._destroyDefender, this);
+        app.on(Events.TOGGLE_DEFENDER_MENU, this._listenToggleDefenderMenu, this);
+    }
+
     _removeListeners() {
         super._removeListeners();
         app.off(Events.SPAWN_DEFENDER, this._spawnDefender, this);
@@ -279,6 +312,7 @@ export default class LevelState extends State {
         super._resize(width, height);
         this._hud.resize(width, height);
         this._cardContainer.resize(width, height);
+        this._defenderMenu.resize(width, height);
     }
 
     exit() {
@@ -295,6 +329,9 @@ export default class LevelState extends State {
         this._hud = null;
         this._playerStats = null;
         this._wave = null;
+        this._cardContainer = null;
+        this._defenderMenu = null;
+        this._isEnabled = null;
         this._disabledCells = null;
         this._occupiedCells = null;
     }
