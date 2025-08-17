@@ -80,7 +80,8 @@ export default class Enemy extends Character {
         gsap.killTweensOf(this);
         app.emit(Events.UPDATE_COINS, this._characterConfig.coins);
         this._hideAllComponents();
-        this._showCoins(this._characterConfig.coins).then(() => {
+        const value = `${this._characterConfig.coins} ${i18n.get('COINS')}`;
+        this._showFlyText({value}).then(() => {
             app.emit(Events.ENEMY_KILLED, this);
         });
     }

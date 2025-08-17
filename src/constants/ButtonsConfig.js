@@ -1,7 +1,7 @@
 const ButtonsConfig = {
     DEFAULT: {
         width: 80,
-        height: 35,
+        height: 36,
         color: 0xaebf58,
     },
     MENU: {

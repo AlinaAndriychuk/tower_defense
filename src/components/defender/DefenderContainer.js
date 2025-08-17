@@ -7,6 +7,7 @@ export default class DefenderContainer extends Container{
         super();
         this._defenders = [];
         this._readyDefenders = [];
+        this._movingDefender = null;
 
         this._init();
     }
@@ -19,36 +20,36 @@ export default class DefenderContainer extends Container{
         const defender = new Defender(type);
         defender.spawn(x, y);
         this._defenders.push(defender);
-        app.emit(Events.TOGGLE_DEFENDER_MENU, defender);
+        this._movingDefender = defender;
         return this.addChild(defender);
     }
 
     moveDefender(x = 0, y = 0) {
-        this._getLastDefender()?.move(x, y);
+        this._movingDefender?.move(x, y);
     }
 
     showDefenderDisabled() {
-        this._getLastDefender()?.showDisabled();
+        this._movingDefender?.showDisabled();
     }
 
     showDefenderEnabled() {
-        this._getLastDefender()?.showEnabled();
+        this._movingDefender?.showEnabled();
     }
 
     buyDefender() {
-        const defender = this._getLastDefender();
-        if (!defender) return;
+        if (!this._movingDefender) return;
 
-        this._setDefenderReady(defender);
-        defender.activate();
-        defender.buy();
+        this._setDefenderReady(this._movingDefender);
+        this._movingDefender.activate();
+        this._movingDefender.buy();
+        this._movingDefender = null;
     }
 
     cancelDefenderSpawn() {
-        const defender = this._getLastDefender();
-        if (!defender) return;
+        if (!this._movingDefender) return;
 
-        this._destroyDefender(defender);
+        this._destroyDefender(this._movingDefender);
+        this._movingDefender = null;
     }
 
     _removeDefenderReady(defender) {
@@ -70,6 +71,10 @@ export default class DefenderContainer extends Container{
         this._defenders.splice(this._defenders.indexOf(defender), 1);
         app.emit(Events.DESTROY_DEFENDER, defender);
         defender.destroy();
+
+        if (this._movingDefender === defender) {
+            this._movingDefender = null;
+        }
     }
 
     destroy(options = {}) {
@@ -79,10 +84,6 @@ export default class DefenderContainer extends Container{
         this._clear();
         this.removeFromParent();
         super.destroy({children: true});
-    }
-
-    _getLastDefender() {
-        return this._defenders[this._defenders.length - 1];
     }
 
     _addListeners() {
@@ -101,9 +102,14 @@ export default class DefenderContainer extends Container{
         this._removeListeners();
         this._defenders = null;
         this._readyDefenders = null;
+        this._movingDefender = null;
     }
 
     get readyDefenders() {
         return this._readyDefenders;
+    }
+
+    get defenderIsMoving() {
+        return this._movingDefender;
     }
 }

@@ -2,7 +2,7 @@ const Styles = {
     DEFAULT: {
         TITLE: {
             fontFamily: 'Times New Roman',
-            fontSize: 15,
+            fontSize: 12,
             fill: 0xffffff,
             stroke: 0x000000,
             dropShadow: {
@@ -15,7 +15,7 @@ const Styles = {
         },
         VALUE: {
             fontFamily: 'Times New Roman',
-            fontSize: 15,
+            fontSize: 12,
             fill: 0xFBFFB0,
             stroke: 0x000000,
             dropShadow: {
@@ -28,7 +28,7 @@ const Styles = {
         },
         BUTTON: {
             fontFamily: 'Times New Roman',
-            fontSize: 15,
+            fontSize: 10,
             fill: 0xffffff,
             stroke: 0x000000,
             dropShadow: {
@@ -79,7 +79,7 @@ const Styles = {
         }
     },
     CHARACTER: {
-        COINS: {
+        FLY_TEXT: {
             fontFamily: 'Times New Roman',
             fontSize: 15,
             fill: 0xFBFFB0,

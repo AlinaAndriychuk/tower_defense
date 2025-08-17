@@ -4,11 +4,21 @@ import config from '../../config';
 import Events from '../../constants/Events';
 import utils from '../../helpers/utils';
 import AnimationNames from '../../constants/AnimationNames';
+import i18n from '../../helpers/i18n';
+
+const flyTextConfig = {
+    from: -30,
+    to: -55,
+    duration: 0.5,
+};
 
 export default class Defender extends Character {
     _init() {
-        super._init();
         this._lastAttackTime = performance.now();
+        this._damage = this._characterConfig.damage[0];
+        this._isActivated = false;
+
+        super._init();
     }
 
     _createCollision() {
@@ -46,6 +56,7 @@ export default class Defender extends Character {
     }
 
     activate() {
+        this._isActivated = true;
         this._collision.alpha = 0.2; // todo set to 0
         this._enable();
         this._animatedSprite.on('pointerdown', this._toggleDefenderMenu, this);
@@ -67,7 +78,9 @@ export default class Defender extends Character {
 
     sell() {
         this._hideAllComponents();
-        return this._showCoins(this._characterConfig.refund).then(() => {
+        const value = `${this._characterConfig.refund} ${i18n.get('COINS')}`;
+        const {from, to, duration} = flyTextConfig;
+        return this._showFlyText({value, from, to, duration}).then(() => {
             app.emit(Events.UPDATE_COINS, this._characterConfig.refund);
         });
     }
@@ -75,22 +88,22 @@ export default class Defender extends Character {
     async attack(enemies = []) {
         const now = performance.now();
 
-        if (now - this._lastAttackTime < this._characterConfig.attackCooldown * 1000) {
+        if (now - this._lastAttackTime < this._characterConfig.delay * 1000) {
             this._startCooldown();
         } else {
             this._lastAttackTime = now;
-            enemies[0].takeDamage(this._characterConfig.damage) // todo attack by selected target
+            enemies[0].takeDamage(this.damage) // todo attack by selected target
 
             if (this._animationName !== this._getAnimation(AnimationNames.ATTACK)) {
                 await this._playAnimation(AnimationNames.ATTACK);
-                this._playAnimation(AnimationNames.IDLE);
+                this._playAnimation(AnimationNames.IDLE, true);
             }
         }
     }
 
     _startCooldown() {
         app.emit(Events.DEFENDER_COOLDOWN_START, this);
-        utils.wait(this._characterConfig.attackCooldown).then(() => {
+        utils.wait(this._characterConfig.delay).then(() => {
             if (this.destroyed) return;
             app.emit(Events.DEFENDER_COOLDOWN_COMPLETE, this);
         });
@@ -99,5 +112,22 @@ export default class Defender extends Character {
     _clear() {
         super._clear();
         this._lastAttackTime = null;
+        this._damage = null;
+        this._isActivated = null;
+    }
+
+    get damage() {
+        return this._damage;
+    }
+
+    set damage(value) {
+        const text = `${i18n.get('DAMAGE')}: ${value}`;
+        const {from, to, duration} = flyTextConfig;
+        this._showFlyText({value: text, from, to, duration});
+        return this._damage = value;
+    }
+
+    get isActivated() {
+        return this._isActivated;
     }
 }

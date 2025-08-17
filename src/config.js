@@ -19,7 +19,7 @@ const config = {
         safeWidth: 750,
         safeHeight: 500,
     },
-    menu: {
+    menu: { // todo move to menu
         title: {
             y: 200
         },
@@ -27,8 +27,12 @@ const config = {
             y: 350
         }
     },
+    cell: {
+        width: 32,
+        height: 32,
+    },
     levelSelector: {
-        card: {
+        card: { // todo move to levelSelector
             width: 100,
             height: 100,
         },
@@ -53,8 +57,8 @@ const config = {
                     { x: 832, y: 334 },
                 ],
                 cells: {
-                    start: {x: 9, y: 3},
-                    end: {x: 21, y: 15},
+                    start: {x: 5, y: 3},
+                    end: {x: 25, y: 15},
                 },
                 waves: [
                     {
@@ -68,10 +72,6 @@ const config = {
     character: {
         speedCoefficient: 100,
         scale: 0.5,
-        coins: {
-            y: -25,
-            duration: 0.5,
-        },
     },
     characters: {
         medusa: {
@@ -91,22 +91,23 @@ const config = {
             animationSpeed: 0.15,
             speed: 1000,
             buy: 25,
-            refund: 15,
-            attack: 10,
-            attackCooldown: 0.5,
-            damage: 10,
             spriteY: -15,
+            refund: 15,
             collision: {
                 radiusX: 50,
                 radiusY: 45
-            }
+            },
+            upgradeCost: [15, 20, 30, 50],
+            damage: [10, 12, 15, 17, 19],
+            range: [50, 60, 70, 80, 90],
+            delay: [0.5, 0.4, 0.3, 0.2, 0.1],
         },
     },
     defender: {
         collision: {
             default: 0xffffff,
             disabled: 0xCB6872
-        }
+        },
     },
     enemy: {
         healthBar: {
@@ -116,7 +117,7 @@ const config = {
         },
     },
     defenders: ['ariel'],
-    hud: {
+    hud: { // todo move to hud
         width: 150,
         height: 80,
         color: 0x000000,
@@ -137,14 +138,14 @@ const config = {
             }
         }
     },
-    cardContainer: {
+    cardContainer: { // todo move to cardContainer
         width: 90,
         height: 128,
         y: 80,
         color: 0x000000,
         alpha: 0.3,
     },
-    card: {
+    card: { // todo move to card
         width: 90,
         height: 128,
         text: {
@@ -156,27 +157,6 @@ const config = {
         },
         disabled: {
             alpha: 0.5
-        }
-    },
-    cell: {
-        width: 32,
-        height: 32,
-    },
-    defenderMenu: {
-        width: 90,
-        height: 128,
-        y: 80,
-        alpha: 0.3,
-        color: 0x000000,
-        sellButton: {
-            y: 87
-        },
-        cancelButton: {
-            y: 105
-        },
-        refund: {
-            x: 5,
-            y: 108
         }
     }
 };

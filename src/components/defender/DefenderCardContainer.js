@@ -64,6 +64,7 @@ export default class DefenderCardContainer extends Container {
 
     destroy() {
         this._clear();
+        this.removeFromParent();
         super.destroy({children: true});
     }
 

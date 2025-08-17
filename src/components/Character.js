@@ -2,8 +2,13 @@ import {AnimatedSprite, Assets, Container, Graphics, Text} from 'pixi.js';
 import config from '../config';
 import AnimationNames from '../constants/AnimationNames';
 import utils from '../helpers/utils';
-import i18n from '../helpers/i18n';
 import Styles from '../constants/Styles';
+
+const flyTextConfig = {
+    from: 0,
+    to: -25,
+    duration: 0.5,
+};
 
 export default class Character extends Container {
     constructor(type = '') {
@@ -98,17 +103,22 @@ export default class Character extends Container {
         return deferred.promise;
     }
 
-    _showCoins(coins = 0) {
+    _showFlyText({value = '', from, to, duration}) {
         const text = new Text({
-            text: `+${coins} ${i18n.get('COINS')}`,
-            style: Styles.CHARACTER.COINS
+            text: value,
+            style: Styles.CHARACTER.FLY_TEXT
         });
         text.anchor.set(0.5);
+        text.y = from ?? flyTextConfig.from;
         this.addChild(text);
 
         return gsap.to(text, {
-            y: config.character.coins.y,
-            duration: config.character.coins.duration,
+            y: to ?? flyTextConfig.to,
+            duration: duration ?? flyTextConfig.duration,
+            onComplete: () => {
+                text.removeFromParent();
+                text.destroy({children: true});
+            }
         }).then();
     }
 

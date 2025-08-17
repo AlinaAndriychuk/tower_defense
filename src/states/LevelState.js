@@ -180,6 +180,8 @@ export default class LevelState extends State {
         this._enable();
         this.on('pointermove', this._moveDefender, this);
         this.on('pointerdown', this._buyDefender, this);
+        app.emit(Events.TOGGLE_DEFENDER_MENU);
+        this.cursor = 'pointer';
 
         const {x, y} =  this._getPossibleDefenderLocalPos(event);
         this._defenderContainer.spawnDefender(type, x, y);
@@ -284,10 +286,13 @@ export default class LevelState extends State {
 
     _listenToggleDefenderMenu() {
         this._enable();
+        this.cursor = 'default';
         this.on('pointerdown', this._toggleDefenderMenu, this);
     }
 
     _toggleDefenderMenu() {
+        if (this._defenderContainer.defenderIsMoving) return;
+
         app.emit(Events.TOGGLE_DEFENDER_MENU);
         this._disable();
         this.off('pointerdown', this._toggleDefenderMenu, this);

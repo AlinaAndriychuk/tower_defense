@@ -9,4 +9,10 @@ export default {
     SELL: 'Sell',
     REFUND: 'Refund',
     CANCEL: 'Cancel',
+    UPGRADE_DAMAGE: 'Upgrade damage',
+    UPGRADE_RANGE: 'Upgrade range',
+    UPGRADE_DELAY: 'Upgrade delay',
+    DAMAGE: 'Damage',
+    RANGE: 'Range',
+    DELAY: 'Delay',
 };
